@@ -44,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<GridItem> mGridData;
     private GridViewAdapter mGridAdapter;
     private ProgressBar mProgressBar;
-    private String FEED_URL = "http://api.themoviedb.org/3/movie/popular?api_key=[281ad0257e71bca17a21b42c9fee7304]";
+    private String FEED_URL = "http://api.themoviedb.org/3/movie/popular?api_key=[]";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class MainActivity extends ActionBarActivity {
     public class AsyncHttpTask extends AsyncTask<String, Void, Integer> {
         private void formatData(String preferenceType) {
             if (preferenceType.equals(getString(R.string.pref_order_top_rated))) {
-                FEED_URL = "http://api.themoviedb.org/3/movie/top_rated?api_key=[281ad0257e71bca17a21b42c9fee7304]";
+                FEED_URL = "http://api.themoviedb.org/3/movie/top_rated?api_key=[]";
             } else if (!preferenceType.equals(getString(R.string.pref_order_most_popular))) {
                 Log.d(TAG, "Setting type not found " + preferenceType);
             }
