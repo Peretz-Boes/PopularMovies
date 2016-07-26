@@ -2,10 +2,12 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +35,6 @@ import java.util.Arrays;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-    public static boolean ISATABLET=false;
     static GridView imageGridView;
     static ArrayList<String> images;
     static int deviceWidth;
@@ -42,7 +43,10 @@ public class MainActivityFragment extends Fragment {
     static ArrayList<String> title;
     static ArrayList<String> date;
     static ArrayList<String> rating;
-    public String url="http://api.themoviedb.org/3/movie/popular&api_key=281ad0257e71bca17a21b42c9fee7304";
+    public String url="http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=281ad0257e71bca17a21b42c9fee7304";
+    private final String LOG_TAG=MainActivityFragment.class.getSimpleName();
+    static PreferenceChangeListener preferenceChangeListener;
+    static SharedPreferences sharedPreferences;
     public MainActivityFragment() {
     }
 
@@ -71,12 +75,32 @@ public class MainActivityFragment extends Fragment {
         });
         return rootView;
     }
+    private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener{
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            imageGridView.setAdapter(null);
+            onStart();
+        }
+    }
     @Override
     public void onStart(){
         super.onStart();
+        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
+        preferenceChangeListener=new PreferenceChangeListener();
+        sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+        String orderType;
+        if (sharedPreferences.getString("Order of movies shown","").equals(R.string.pref_order_most_popular)){
+            getActivity().setTitle("Most popular movies now");
+            sortByPopular=true;
+        }else if (sharedPreferences.getString("Order of movies shown","").equals(R.string.pref_order_top_rated)){
+            getActivity().setTitle("Highest rated movies now");
+            sortByPopular=false;
+        }
             ImageLoader imageLoader=new ImageLoader();
         if (isInternetAvailable()) {
             imageLoader.execute();
+            Log.v(LOG_TAG,"async task completed");
         }else {
             TextView textView=new TextView(getActivity());
             RelativeLayout relativeLayout=(RelativeLayout)getActivity().findViewById(R.id.container);
@@ -94,7 +118,7 @@ public class MainActivityFragment extends Fragment {
     }
     public class ImageLoader extends AsyncTask<Void,Void,ArrayList<String>>{
 
-        private final String LOG_TAG=ImageLoader.class.getSimpleName();
+
         @Override
         protected ArrayList<String> doInBackground(Void... params) {
             while (true){
@@ -120,7 +144,12 @@ public class MainActivityFragment extends Fragment {
                 BufferedReader bufferedReader=null;
                 String JSONResult;
                 try {
-                    String url=null;
+                    String urlString=null;
+                    if (sortByPopular){
+                        urlString = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=281ad0257e71bca17a21b42c9fee7304";
+                    }else {
+                        urlString="http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&vote_count.gte=500&api_key=281ad0257e71bca17a21b42c9fee7304";
+                    }
                     URL url1=new URL(url);
                     httpURLConnection=(HttpURLConnection)url1.openConnection();
                     httpURLConnection.setRequestMethod("GET");
@@ -139,6 +168,7 @@ public class MainActivityFragment extends Fragment {
                         return null;
                     }
                     JSONResult=stringBuffer.toString();
+                    Log.v(LOG_TAG,JSONResult);
                     try {
                         overview=new ArrayList<String>(Arrays.asList(getStringsFromAPI(JSONResult, "overview")));
                         title=new ArrayList<String>(Arrays.asList(getStringsFromAPI(JSONResult, "original_title")));
@@ -164,12 +194,6 @@ public class MainActivityFragment extends Fragment {
                 }
             }
         }
-        private void formatData(String orderType){
-            if (orderType.equals(getString(R.string.pref_order_top_rated))){
-                url="http://api.themoviedb.org/3/movie/top_rated&api_key=281ad0257e71bca17a21b42c9fee7304";
-            }else if (!orderType.equals(getString(R.string.pref_order_most_popular))){
-                Log.d(LOG_TAG,"Order type not found: "+orderType);
-            }
         }
         public String[] getStringsFromAPI(String JSONStringParameter,String parameter) throws JSONException{
             JSONObject jsonObject=new JSONObject(JSONStringParameter);
@@ -199,4 +223,3 @@ public class MainActivityFragment extends Fragment {
             return results;
         }
     }
-}

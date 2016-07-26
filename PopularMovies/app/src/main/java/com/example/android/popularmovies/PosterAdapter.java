@@ -6,8 +6,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 /**
@@ -48,7 +46,6 @@ public class PosterAdapter extends BaseAdapter {
         }else {
             image=(ImageView)convertView;
         }
-        Picasso.with(context).load("http://image.tmdb.org/t/p/w185"+arrayList.get(position)).resize(posterWidth, (int) (posterWidth*1.5)).into(image);
         return image;
     }
 }
