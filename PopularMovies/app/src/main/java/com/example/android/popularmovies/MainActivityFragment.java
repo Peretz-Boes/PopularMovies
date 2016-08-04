@@ -1,3 +1,4 @@
+//MainActivityFragment.java
 package com.example.android.popularmovies;
 
 import android.content.Context;
@@ -38,12 +39,11 @@ public class MainActivityFragment extends Fragment {
     static GridView imageGridView;
     static ArrayList<String> images;
     static int deviceWidth;
-    static boolean sortByPopular;
+    static boolean sortByPopular=true;
     static ArrayList<String> overview;
     static ArrayList<String> title;
     static ArrayList<String> date;
     static ArrayList<String> rating;
-    public String url="http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=281ad0257e71bca17a21b42c9fee7304";
     private final String LOG_TAG=MainActivityFragment.class.getSimpleName();
     static PreferenceChangeListener preferenceChangeListener;
     static SharedPreferences sharedPreferences;
@@ -89,12 +89,9 @@ public class MainActivityFragment extends Fragment {
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
         preferenceChangeListener=new PreferenceChangeListener();
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
-        String orderType;
-        if (sharedPreferences.getString("Order of movies shown","").equals(R.string.pref_order_most_popular)){
-            getActivity().setTitle("Most popular movies now");
+        if (sharedPreferences.getString(getString(R.string.pref_order_key),"").equals(R.string.pref_order_most_popular)){
             sortByPopular=true;
-        }else if (sharedPreferences.getString("Order of movies shown","").equals(R.string.pref_order_top_rated)){
-            getActivity().setTitle("Highest rated movies now");
+        }else if (sharedPreferences.getString(getString(R.string.pref_order_key),"").equals(R.string.pref_order_top_rated)){
             sortByPopular=false;
         }
             ImageLoader imageLoader=new ImageLoader();
@@ -103,7 +100,7 @@ public class MainActivityFragment extends Fragment {
             Log.v(LOG_TAG,"async task completed");
         }else {
             TextView textView=new TextView(getActivity());
-            RelativeLayout relativeLayout=(RelativeLayout)getActivity().findViewById(R.id.container);
+            RelativeLayout relativeLayout=(RelativeLayout)getActivity().findViewById(R.id.fragment_layout);
             textView.setText("There is no Internet service");
             if (relativeLayout.getChildCount()==1){
                 relativeLayout.addView(textView);
@@ -144,13 +141,13 @@ public class MainActivityFragment extends Fragment {
                 BufferedReader bufferedReader=null;
                 String JSONResult;
                 try {
-                    String urlString=null;
+                    String urlString;
                     if (sortByPopular){
                         urlString = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=281ad0257e71bca17a21b42c9fee7304";
                     }else {
                         urlString="http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&vote_count.gte=500&api_key=281ad0257e71bca17a21b42c9fee7304";
                     }
-                    URL url1=new URL(url);
+                    URL url1=new URL(urlString);
                     httpURLConnection=(HttpURLConnection)url1.openConnection();
                     httpURLConnection.setRequestMethod("GET");
                     httpURLConnection.connect();

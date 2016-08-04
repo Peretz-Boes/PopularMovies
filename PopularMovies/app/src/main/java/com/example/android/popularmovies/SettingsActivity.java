@@ -1,3 +1,4 @@
+//SettingsActivity.java
 package com.example.android.popularmovies;
 
 import android.os.Bundle;

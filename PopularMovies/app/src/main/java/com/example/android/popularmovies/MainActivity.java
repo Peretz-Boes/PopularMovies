@@ -1,3 +1,4 @@
+//MainActivity.java
 package com.example.android.popularmovies;
 
 import android.content.Intent;

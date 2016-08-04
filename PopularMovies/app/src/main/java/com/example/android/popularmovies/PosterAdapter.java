@@ -1,3 +1,4 @@
+//PosterAdapter.java
 package com.example.android.popularmovies;
 
 import android.content.Context;
@@ -5,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -46,6 +49,8 @@ public class PosterAdapter extends BaseAdapter {
         }else {
             image=(ImageView)convertView;
         }
+        String url = "http://image.tmdb.org/t/p/w185" + arrayList.get(position);
+        Picasso.with(context).load(url).into(image);
         return image;
     }
 }

@@ -25,7 +25,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
         if (savedInstanceState==null){
-            getSupportFragmentManager().beginTransaction().add(R.id.container,new DetailActivityFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().add(R.id.container,new DetailActivityFragment()).commit();
         }
     }
 

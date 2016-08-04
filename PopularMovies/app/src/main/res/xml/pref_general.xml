@@ -5,7 +5,7 @@
 
     <ListPreference
         android:title="@string/pref_order_label"
-        android:key="Order of movies shown"
+        android:key="@string/pref_order_key"
         android:defaultValue="@string/pref_order_most_popular"
         android:entryValues="@array/pref_order_values"
         android:entries="@array/pref_order_options"/>
