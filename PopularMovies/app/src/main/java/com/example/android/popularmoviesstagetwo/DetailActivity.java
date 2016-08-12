@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmoviesstagetwo;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 public class DetailActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +24,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
         if (savedInstanceState==null){
-            //getSupportFragmentManager().beginTransaction().add(R.id.container,new DetailActivityFragment()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container,new DetailActivityFragment()).commit();
         }
     }
-
 }

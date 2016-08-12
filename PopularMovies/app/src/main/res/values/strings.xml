@@ -1,12 +1,14 @@
 <resources>
-<string name="app_name">PopularMovies</string>
-<string name="action_settings">Settings</string>
-<string name="title_activity_detail">DetailActivity</string>
-<string name="title_activity_settings">Settings</string>
-<string name="pref_order_label">Order of displayed movies</string>
-<string name="pref_order_label_most_popular">Most Popular</string>
-<string name="pref_order_label_top_rated">Top Rated</string>
-<string name="pref_order_key">Order of movies shown</string>
-<string name="pref_order_most_popular">Most Popular</string>
-<string name="pref_order_top_rated">Top Rated</string>
+    <string name="app_name">PopularMovies</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_order_label">Order of displayed movies</string>
+    <string name="pref_order_label_most_popular">Most Popular</string>
+    <string name="pref_order_label_top_rated">Top Rated</string>
+    <string name="pref_label_show_favourited_movies">By Favourites</string>
+    <string name="pref_order_key">Order of movies shown</string>
+    <string name="pref_order_most_popular">Most Popular</string>
+    <string name="pref_order_top_rated">Top Rated</string>
+    <string name="pref_show_favourited_movies">By Favourites</string>
 </resources>

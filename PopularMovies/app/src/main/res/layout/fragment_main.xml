@@ -10,13 +10,18 @@
     tools:showIn="@layout/activity_main"
     android:id="@+id/fragment_layout">
 
-   <GridView
-       android:id="@+id/image_grid_view"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:numColumns="auto_fit"
-       android:stretchMode="columnWidth">
+    <GridView
+        android:id="@+id/image_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth">
 
-   </GridView>
+    </GridView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_favourited_movies_text_view"/>
 
 </RelativeLayout>

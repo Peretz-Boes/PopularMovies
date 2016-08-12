@@ -1,5 +1,4 @@
-//SettingsActivity.java
-package com.example.android.popularmovies;
+package com.example.android.popularmoviesstagetwo;
 
 import android.os.Bundle;
 import android.preference.ListPreference;

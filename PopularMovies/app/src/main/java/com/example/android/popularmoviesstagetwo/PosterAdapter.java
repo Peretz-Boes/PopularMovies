@@ -1,5 +1,4 @@
-//PosterAdapter.java
-package com.example.android.popularmovies;
+package com.example.android.popularmoviesstagetwo;
 
 import android.content.Context;
 import android.view.View;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
  * Created by Peretz on 2016-07-05.
  */
 public class PosterAdapter extends BaseAdapter {
-
     private Context context;
     private ArrayList<String> arrayList;
     private int posterWidth;

@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmoviesstagetwo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +34,7 @@ public class DetailActivityFragment extends Fragment {
         String rating=intent.getStringExtra("rating");
         String poster=intent.getStringExtra("poster");
         String overview=intent.getStringExtra("overview");
+        String comments=intent.getStringExtra("comments");
         String url = "http://image.tmdb.org/t/p/w185" + poster;
         ImageView imageView=(ImageView)rootView.findViewById(R.id.image);
         Picasso.with(getActivity()).load(url).into(imageView);
@@ -45,5 +46,7 @@ public class DetailActivityFragment extends Fragment {
         textView2.setText(rating);
         TextView textView3=(TextView)rootView.findViewById(R.id.overview);
         textView3.setText(overview);
+        TextView textView4=(TextView)rootView.findViewById(R.id.user_comments);
+        textView4.setText(comments);
     }
 }
