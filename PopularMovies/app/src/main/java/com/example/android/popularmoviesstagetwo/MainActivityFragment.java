@@ -196,9 +196,9 @@ public class MainActivityFragment extends Fragment {
                 try {
                     String urlString;
                     if (sortByPopular){
-                        urlString = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=281ad0257e71bca17a21b42c9fee7304";
+                        urlString = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=your_api_key";
                     }else {
-                        urlString="http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&vote_count.gte=500&api_key=281ad0257e71bca17a21b42c9fee7304";
+                        urlString="http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&vote_count.gte=500&api_key=your_api_key";
                     }
                     URL url1=new URL(urlString);
                     httpURLConnection=(HttpURLConnection)url1.openConnection();
@@ -280,7 +280,7 @@ public class MainActivityFragment extends Fragment {
             String JSONResult;
             try {
                 String urlString = null;
-                urlString = "http://api.themoviedb.org/3/movie/" + id.get(i) + "/videos?api_key=281ad0257e71bca17a21b42c9fee7304";
+                urlString = "http://api.themoviedb.org/3/movie/" + id.get(i) + "/videos?api_key=your_api_key";
                 URL url1 = new URL(urlString);
                 httpURLConnection = (HttpURLConnection) url1.openConnection();
                 httpURLConnection.setRequestMethod("GET");
@@ -333,7 +333,7 @@ public class MainActivityFragment extends Fragment {
                 String JSONResult;
                 try {
                     String urlString=null;
-                    urlString="http://api.themoviedb.org/3/movie/" + id.get(i) + "/reviews?api_key=281ad0257e71bca17a21b42c9fee7304";
+                    urlString="http://api.themoviedb.org/3/movie/" + id.get(i) + "/reviews?api_key=your_api_key";
                     URL url1 = new URL(urlString);
                     httpURLConnection = (HttpURLConnection) url1.openConnection();
                     httpURLConnection.setRequestMethod("GET");
