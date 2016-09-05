@@ -143,9 +143,15 @@ public class MainActivityFragment extends Fragment {
                 try {
                     String urlString;
                     if (sortByPopular){
+<<<<<<< HEAD
                         urlString = "http://api.themoviedb.org/3/movie/popular?api_key=your_api_key";
                     }else {
                         urlString="http://api.themoviedb.org/3/movie/top_rated?api_key=your_api_key";
+=======
+                        urlString = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=281ad0257e71bca17a21b42c9fee7304";
+                    }else {
+                        urlString="http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&vote_count.gte=500&api_key=281ad0257e71bca17a21b42c9fee7304";
+>>>>>>> origin/master
                     }
                     URL url1=new URL(urlString);
                     httpURLConnection=(HttpURLConnection)url1.openConnection();
