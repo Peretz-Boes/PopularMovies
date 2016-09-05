@@ -1,8 +1,10 @@
 package com.example.android.popularmoviesstagetwo;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -48,5 +63,96 @@ public class DetailActivityFragment extends Fragment {
         textView3.setText(overview);
         TextView textView4=(TextView)rootView.findViewById(R.id.user_comments);
         textView4.setText(comments);
+        VideoLoader videoLoader=new VideoLoader();
+        videoLoader.execute();
+    }
+
+    public class VideoLoader extends AsyncTask<Void,Void,ArrayList<String>>{
+        private ArrayList<String>youtubeLinks1;
+        private ArrayList<String>youtubeLinks2;
+        private ArrayList<String>id;
+        private final String LOG_TAG=MainActivityFragment.class.getSimpleName();
+        @Override
+        protected ArrayList<String> doInBackground(Void... params) {
+            youtubeLinks1=new ArrayList<String>(Arrays.asList(getYoutubeVideosFromIds(id,0)));
+            youtubeLinks2=new ArrayList<String>(Arrays.asList(getYoutubeVideosFromIds(id,1)));
+            if (youtubeLinks1==null){
+                Log.d("DetailActivityFragment","Error Downloading");
+                return youtubeLinks1;
+            }
+            if (youtubeLinks2==null){
+                Log.d("DetailActivityFragment","Error Downloading");
+                return youtubeLinks2;
+            }
+        }
+        public String[] getYoutubeVideosFromIds(ArrayList<String> id,int position) {
+            String[] results=new String[id.size()];
+            for (int i=0;i<id.size();i++){
+                while (true) {
+                    HttpURLConnection httpURLConnection = null;
+                    BufferedReader bufferedReader = null;
+                    String JSONResult;
+                    try {
+                        String urlString = "http://api.themoviedb.org/3/movie/" + id.get(i) + "/videos?api_key=281ad0257e71bca17a21b42c9fee7304";
+                        URL url1 = new URL(urlString);
+                        httpURLConnection = (HttpURLConnection) url1.openConnection();
+                        httpURLConnection.setRequestMethod("GET");
+                        httpURLConnection.connect();
+                        InputStream inputStream = httpURLConnection.getInputStream();
+                        StringBuffer stringBuffer = new StringBuffer();
+                        if (inputStream == null) {
+                            return null;
+                        }
+                        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                        String data;
+                        while ((data = bufferedReader.readLine()) != null) {
+                            stringBuffer.append(data + "\n");
+                        }
+                        if (stringBuffer.length() == 0) {
+                            return null;
+                        }
+                        JSONResult = stringBuffer.toString();
+                        Log.v(LOG_TAG, JSONResult);
+                        try {
+                            results[i]=getYoutubeVideosFromJSON(JSONResult,position);
+                        }catch (JSONException E){
+                            results[i]="no video found";
+                        }
+                    }catch (Exception e){
+
+                    }finally {
+                        if (httpURLConnection!=null){
+                            httpURLConnection.disconnect();
+                        }
+                        if (bufferedReader!=null){
+                            try {
+                                bufferedReader.close();
+                            }catch (final IOException e){
+
+                            }
+                        }
+                    }
+                }
+            }
+            return results;
+        }
+        public String getYoutubeVideosFromJSON(String JSONStringParameter,int position)throws JSONException{
+            JSONObject jsonObject=new JSONObject(JSONStringParameter);
+            JSONArray jsonArray=jsonObject.getJSONArray("results");
+            JSONObject jsonObject1;
+            String resultString="no videos have been found";
+            if (position==0){
+                jsonObject1=jsonArray.getJSONObject(0);
+                resultString=jsonObject1.getString("key");
+            }else if (position==1){
+                if (jsonArray.length()>1){
+                    jsonObject1=jsonArray.getJSONObject(1);
+                }else {
+                    jsonObject1=jsonArray.getJSONObject(0);
+                }
+                resultString=jsonObject1.getString("key");
+            }
+            return resultString;
+        }
     }
 }
