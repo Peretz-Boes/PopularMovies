@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,14 +46,11 @@ public class MainActivityFragment extends Fragment {
     static ArrayList<String> title;
     static ArrayList<String> date;
     static ArrayList<String> rating;
-    public String url="http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=281ad0257e71bca17a21b42c9fee7304";
     private final String LOG_TAG=MainActivityFragment.class.getSimpleName();
     static PreferenceChangeListener preferenceChangeListener;
     static SharedPreferences sharedPreferences;
     static boolean sortByFavouriteMovies;
     static ArrayList<String>favouritePosters=new ArrayList<String>();
-    static ArrayList<String>youtubeLinks1;
-    static ArrayList<String>youtubeLinks2;
     static ArrayList<String>id;
     static ArrayList<Boolean> favouritedMovies;
     static ArrayList<ArrayList<String>> userComments;
@@ -89,8 +85,6 @@ public class MainActivityFragment extends Fragment {
                         .putExtra("title", title.get(position))
                         .putExtra("date", date.get(position))
                         .putExtra("rating", rating.get(position))
-                        .putExtra("youtube",youtubeLinks1.get(position))
-                        .putExtra("youtube2",youtubeLinks2.get(position))
                         .putExtra("comments",userComments.get(position))
                         .putExtra("favourited",favouritedMovies.get(position));
                 startActivity(intent);
@@ -104,61 +98,14 @@ public class MainActivityFragment extends Fragment {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             imageGridView.setAdapter(null);
-            onStart();
+            connectToInternet();
         }
     }
     @Override
     public void onStart(){
         super.onStart();
-        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
-        preferenceChangeListener=new PreferenceChangeListener();
-        sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
-        String orderType;
-        if (sharedPreferences.getString("Order of movies shown","").equals(R.string.pref_order_most_popular)){
-            getActivity().setTitle("Most popular movies now");
-            sortByPopular=true;
-            sortByFavouriteMovies=false;
-        }else if (sharedPreferences.getString("Order of movies shown","").equals(R.string.pref_order_top_rated)){
-            getActivity().setTitle("Highest rated movies now");
-            sortByPopular=false;
-            sortByFavouriteMovies=false;
-        }
-        else if (sharedPreferences.getString("Order of movies shown","").equals(R.string.pref_show_favourited_movies)){
-            sortByPopular=false;
-            sortByFavouriteMovies=true;
-        }
-        TextView textView=new TextView(getActivity());
-        RelativeLayout relativeLayout=(RelativeLayout)getActivity().findViewById(R.id.fragment_layout);
-        if (sortByFavouriteMovies){
-            if (favouritePosters.size()==0){
-                textView.setText("You have no favourites");
-                if (relativeLayout.getChildCount()==1){
-                    imageGridView.setVisibility(GridView.GONE);
-                }
-            }else {
-                imageGridView.setVisibility(GridView.VISIBLE);
-                relativeLayout.removeView(textView);
-            }
-            if (favouritePosters!=null&&getActivity()!=null){
-                PosterAdapter posterAdapter=new PosterAdapter(getActivity(),favouritePosters,deviceWidth);
-                imageGridView.setAdapter(posterAdapter);
-            }
-        }else {
-            imageGridView.setVisibility(GridView.VISIBLE);
-
-            ImageLoader imageLoader = new ImageLoader();
-            if (isInternetAvailable()) {
-                imageLoader.execute();
-                Log.v(LOG_TAG, "async task completed");
-            } else {
-                TextView textView2 = new TextView(getActivity());
-                LinearLayout linearLayout2 = (LinearLayout) getActivity().findViewById(R.id.container);
-                textView2.setText("There is no Internet service");
-                if (linearLayout2.getChildCount() == 1) {
-                    linearLayout2.addView(textView);
-                }
-                imageGridView.setVisibility(GridView.GONE);
-            }
+        if (images==null){
+            connectToInternet();
         }
     }
     public boolean isInternetAvailable(){
@@ -196,9 +143,9 @@ public class MainActivityFragment extends Fragment {
                 try {
                     String urlString;
                     if (sortByPopular){
-                        urlString = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=your_api_key";
+                        urlString = "http://api.themoviedb.org/3/movie/popular?api_key=your_api_key";
                     }else {
-                        urlString="http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&vote_count.gte=500&api_key=your_api_key";
+                        urlString="http://api.themoviedb.org/3/movie/top_rated?api_key=your_api_key";
                     }
                     URL url1=new URL(urlString);
                     httpURLConnection=(HttpURLConnection)url1.openConnection();
@@ -225,29 +172,6 @@ public class MainActivityFragment extends Fragment {
                         rating=new ArrayList<String>(Arrays.asList(getStringsFromAPI(JSONResult, "vote_average")));
                         date=new ArrayList<String>(Arrays.asList(getStringsFromAPI(JSONResult, "release_date")));
                         id=new ArrayList<String>(Arrays.asList(getStringsFromAPI(JSONResult,"id")));
-                        while (true){
-                            youtubeLinks1=new ArrayList<String>(Arrays.asList(getYoutubeVideosFromIds(id,0)));
-                            youtubeLinks2=new ArrayList<String>(Arrays.asList(getYoutubeVideosFromIds(id,1)));
-                            int nullNumber=0;
-                            for (int i=0;i<youtubeLinks1.size();i++){
-                                if (youtubeLinks1.get(i)==null){
-                                    nullNumber++;
-                                    youtubeLinks1.set(i,"no video has been found");
-                                }
-                            }
-                            for (int i=0;i<youtubeLinks2.size();i++){
-                                if (youtubeLinks2.get(i)==null){
-                                    nullNumber++;
-                                    youtubeLinks2.set(i,"no video has been found");
-                                }
-                            }
-                            if (nullNumber>2){
-                                continue;
-                            }else {
-                                break;
-                            }
-                        }
-                        userComments=getUserReviewsFromIds(id);
                         return getDataFromJSON(JSONResult);
                     }catch (JSONException e){
                         return null;
@@ -269,60 +193,7 @@ public class MainActivityFragment extends Fragment {
             }
         }
     }
-    public String[] getYoutubeVideosFromIds(ArrayList<String> id,int position) {
-        String[] results=new String[id.size()];
-        for (int i=0;i<id.size();i++){
 
-
-        while (true) {
-            HttpURLConnection httpURLConnection = null;
-            BufferedReader bufferedReader = null;
-            String JSONResult;
-            try {
-                String urlString = null;
-                urlString = "http://api.themoviedb.org/3/movie/" + id.get(i) + "/videos?api_key=your_api_key";
-                URL url1 = new URL(urlString);
-                httpURLConnection = (HttpURLConnection) url1.openConnection();
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.connect();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                StringBuffer stringBuffer = new StringBuffer();
-                if (inputStream == null) {
-                    return null;
-                }
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String data;
-                while ((data = bufferedReader.readLine()) != null) {
-                    stringBuffer.append(data + "\n");
-                }
-                if (stringBuffer.length() == 0) {
-                    return null;
-                }
-                JSONResult = stringBuffer.toString();
-                Log.v(LOG_TAG, JSONResult);
-                try {
-                    results[i]=getYoutubeVideosFromJSON(JSONResult,position);
-                }catch (JSONException E){
-                    results[i]="no video found";
-                }
-                }catch (Exception e){
-
-            }finally {
-                if (httpURLConnection!=null){
-                    httpURLConnection.disconnect();
-                }
-                if (bufferedReader!=null){
-                    try {
-                        bufferedReader.close();
-                    }catch (final IOException e){
-
-                    }
-                }
-            }
-            }
-        }
-        return results;
-    }
     public ArrayList<ArrayList<String>>getUserReviewsFromIds(ArrayList<String>id){
         outerloop:
         while (true){
@@ -333,7 +204,7 @@ public class MainActivityFragment extends Fragment {
                 String JSONResult;
                 try {
                     String urlString=null;
-                    urlString="http://api.themoviedb.org/3/movie/" + id.get(i) + "/reviews?api_key=your_api_key";
+                    urlString="http://api.themoviedb.org/3/movie/" + id.get(i) + "/reviews?api_key=281ad0257e71bca17a21b42c9fee7304";
                     URL url1 = new URL(urlString);
                     httpURLConnection = (HttpURLConnection) url1.openConnection();
                     httpURLConnection.setRequestMethod("GET");
@@ -390,24 +261,6 @@ public class MainActivityFragment extends Fragment {
         }
         return results;
     }
-    public String getYoutubeVideosFromJSON(String JSONStringParameter,int position)throws JSONException{
-        JSONObject jsonObject=new JSONObject(JSONStringParameter);
-        JSONArray jsonArray=jsonObject.getJSONArray("results");
-        JSONObject jsonObject1;
-        String resultString="no videos have been found";
-        if (position==0){
-            jsonObject1=jsonArray.getJSONObject(0);
-            resultString=jsonObject1.getString("key");
-        }else if (position==1){
-            if (jsonArray.length()>1){
-                jsonObject1=jsonArray.getJSONObject(1);
-            }else {
-                jsonObject1=jsonArray.getJSONObject(0);
-            }
-            resultString=jsonObject1.getString("key");
-        }
-        return resultString;
-    }
     public String[] getStringsFromAPI(String JSONStringParameter,String parameter) throws JSONException{
         JSONObject jsonObject=new JSONObject(JSONStringParameter);
         JSONArray jsonArray=jsonObject.getJSONArray("results");
@@ -435,5 +288,28 @@ public class MainActivityFragment extends Fragment {
             results[i]=posterPath;
         }
         return results;
+    }
+    public void connectToInternet(){
+        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
+        preferenceChangeListener=new PreferenceChangeListener();
+        sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+        if (sharedPreferences.getString(getString(R.string.pref_order_key), "").equals(getResources().getString(R.string.pref_order_most_popular))){
+            sortByPopular=true;
+        }else if (sharedPreferences.getString(getString(R.string.pref_order_key),"").equals(getResources().getString(R.string.pref_order_top_rated))){
+            sortByPopular=false;
+        }
+        ImageLoader imageLoader=new ImageLoader();
+        if (isInternetAvailable()) {
+            imageLoader.execute();
+            Log.v(LOG_TAG,"async task completed");
+        }else {
+            TextView textView=new TextView(getActivity());
+            RelativeLayout relativeLayout=(RelativeLayout)getActivity().findViewById(R.id.fragment_layout);
+            textView.setText("There is no Internet service");
+            if (relativeLayout.getChildCount()==1){
+                relativeLayout.addView(textView);
+            }
+            imageGridView.setVisibility(GridView.GONE);
+        }
     }
 }
