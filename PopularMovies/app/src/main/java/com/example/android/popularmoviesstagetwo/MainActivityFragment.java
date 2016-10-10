@@ -41,7 +41,6 @@ public class MainActivityFragment extends Fragment {
     static GridView imageGridView;
     static ArrayList<String> images;
     static int deviceWidth;
-    static boolean sortByPopular;
     static ArrayList<String> overview;
     static ArrayList<String> title;
     static ArrayList<String> date;

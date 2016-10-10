@@ -11,4 +11,5 @@
     <string name="pref_order_most_popular">Most Popular</string>
     <string name="pref_order_top_rated">Top Rated</string>
     <string name="pref_show_favourited_movies">By Favourites</string>
+
 </resources>

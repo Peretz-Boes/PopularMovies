@@ -84,6 +84,7 @@ public class DetailActivityFragment extends Fragment {
                 Log.d("DetailActivityFragment","Error Downloading");
                 return youtubeLinks2;
             }
+        return null;
         }
         public String[] getYoutubeVideosFromIds(ArrayList<String> id,int position) {
             String[] results=new String[id.size()];
@@ -154,5 +155,6 @@ public class DetailActivityFragment extends Fragment {
             }
             return resultString;
         }
+
     }
 }
