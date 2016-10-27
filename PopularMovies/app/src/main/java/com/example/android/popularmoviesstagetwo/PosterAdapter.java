@@ -1,6 +1,10 @@
 package com.example.android.popularmoviesstagetwo;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,14 +18,27 @@ import java.util.ArrayList;
  * Created by Peretz on 2016-07-05.
  */
 public class PosterAdapter extends BaseAdapter {
+    private static final String LOG_TAG=PosterAdapter.class.getSimpleName();
     private Context context;
     private ArrayList<String> arrayList;
     private int posterWidth;
+    private Cursor cursor;
+    private boolean dataIsValid;
+    private int idRowColumn;
+    private DataSetObserver dataSetObserver;
 
     public PosterAdapter(Context c,ArrayList<String> filePaths,int a){
         context=c;
         arrayList=filePaths;
         posterWidth=a;
+        if (dataIsValid){
+            cursor.registerDataSetObserver(dataSetObserver);
+        }
+        Log.d(LOG_TAG,"in super");
+    }
+
+    public Cursor getCursor(){
+        return cursor;
     }
 
     @Override
@@ -36,7 +53,19 @@ public class PosterAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
+        if (dataIsValid&&cursor!=null&&cursor.moveToPosition(position)){
+            return cursor.getLong(idRowColumn);
+        }
         return 0;
+    }
+
+    public void onMovieDismiss(int position){
+        long cursorId=getItemId(position);
+        Cursor cursor=getCursor();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(ArchivedMovieColumns.TITLE,cursor.getString(cursor.getColumnIndex(MovieColumns.TITLE)));
+        contentValues.put(ArchivedMovieColumns.RATING,cursor.getDouble(cursor.getColumnIndex(MovieColumns.RATING)));
+        contentValues.put(ArchivedMovieColumns.THUMBNAIL,cursor.getInt(cursor.getColumnIndex(MovieColumns.THUMBNAIL)));
     }
 
     @Override

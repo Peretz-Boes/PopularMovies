@@ -1,15 +1,22 @@
 package com.example.android.popularmoviesstagetwo;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -17,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -54,7 +62,19 @@ public class MainActivityFragment extends Fragment {
     static ArrayList<String>id;
     static ArrayList<Boolean> favouritedMovies;
     static ArrayList<ArrayList<String>> userComments;
+    private static final int CURSOR_LOADER_ID=0;
+    private CursorAdapter cursorAdapter;
     public MainActivityFragment() {
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        Cursor cursor=getActivity().getContentResolver().query(MovieProvider.Movies.CONTENT_URI,null,null,null,null);
+        Log.i(LOG_TAG,"cursor count: "+cursor.getCount());
+        if (cursor==null||cursor.getCount()==0){
+            insertMovie();
+        }
+        getLoaderManager().initLoader(CURSOR_LOADER_ID,null,this);
+        super.onActivityCreated(savedInstanceState);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,20 +99,48 @@ public class MainActivityFragment extends Fragment {
         imageGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                favouritedMovies=new ArrayList<Boolean>();
+                favouritedMovies = new ArrayList<Boolean>();
                 Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra("overview", overview.get(position))
                         .putExtra("poster", images.get(position))
                         .putExtra("title", title.get(position))
                         .putExtra("date", date.get(position))
                         .putExtra("rating", rating.get(position))
-                        .putExtra("comments",userComments.get(position))
-                        .putExtra("favourited",favouritedMovies.get(position));
+                        .putExtra("comments", userComments.get(position))
+                        .putExtra("favourited", favouritedMovies.get(position));
                 startActivity(intent);
 
             }
         });
         return rootView;
     }
+
+    public void insertMovie(){
+        Log.d(LOG_TAG, "inserting movie");
+        ArrayList<ContentProviderOperation>batchOperations=new ArrayList<>(favouritePosters.size());
+        for (Movie movie:favouritePosters){
+            ContentProviderOperation.Builder builder=ContentProviderOperation.newInsert(MovieProvider.Movies.CONTENT_URI);
+            builder.withValue(MovieColumns.TITLE,movie.getTitle());
+            builder.withValue(MovieColumns.RATING,movie.getUserRating());
+            builder.withValue(MovieColumns.THUMBNAIL,movie.getThumbnail());
+            batchOperations.add(builder.build());
+        }
+
+        try {
+            getActivity().getContentResolver().applyBatch(MovieProvider.AUTHORITY,batchOperations);
+        }catch (RemoteException | OperationApplicationException e){
+            Log.e(LOG_TAG,"Error applying batch insert",e);
+        }
+    }
+
+    public Loader<Cursor>onCreateLoader(int id,Bundle args){
+        return new CursorLoader(getActivity(),MovieProvider.Movies.CONTENT_URI,null,null,null,null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader,Cursor data){
+        cursorAdapter.swapCursor(data);
+    }
+
     private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener{
 
         @Override
