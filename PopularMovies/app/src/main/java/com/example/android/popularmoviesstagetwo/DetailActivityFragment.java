@@ -1,10 +1,8 @@
 package com.example.android.popularmoviesstagetwo;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,24 +11,20 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 /**
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
     private View rootView;
+    public static String title;
+    public static String date;
+    public static String rating;
+    public static String poster;
+    public static String overview;
+    public static String comments;
+    public static String youtubeLinks1;
+    public static String youtubeLinks2;
+
     public DetailActivityFragment() {
     }
 
@@ -38,54 +32,61 @@ public class DetailActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        rootView= inflater.inflate(R.layout.fragment_detail, container, false);
+        rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         getData();
         return rootView;
     }
-    public void getData(){
-        Intent intent=getActivity().getIntent();
-        String title=intent.getStringExtra("title");
-        String date=intent.getStringExtra("date");
-        String rating=intent.getStringExtra("rating");
-        String poster=intent.getStringExtra("poster");
-        String overview=intent.getStringExtra("overview");
-        String comments=intent.getStringExtra("comments");
-        String url = "http://image.tmdb.org/t/p/w185" + poster;
-        ImageView imageView=(ImageView)rootView.findViewById(R.id.image);
-        Picasso.with(getActivity()).load(url).into(imageView);
-        TextView textView=(TextView)rootView.findViewById(R.id.title);
-        textView.setText(title);
-        TextView textView1=(TextView)rootView.findViewById(R.id.date);
-        textView1.setText(date);
-        TextView textView2=(TextView)rootView.findViewById(R.id.rating);
-        textView2.setText(rating);
-        TextView textView3=(TextView)rootView.findViewById(R.id.overview);
-        textView3.setText(overview);
-        TextView textView4=(TextView)rootView.findViewById(R.id.user_comments);
-        textView4.setText(comments);
-        VideoLoader videoLoader=new VideoLoader();
-        videoLoader.execute();
-    }
 
-    public class VideoLoader extends AsyncTask<Void,Void,ArrayList<String>>{
+    public void getData() {
+        Intent intent = getActivity().getIntent();
+        title = intent.getStringExtra("title");
+        date = intent.getStringExtra("date");
+        rating = intent.getStringExtra("rating");
+        poster = intent.getStringExtra("poster");
+        overview = intent.getStringExtra("overview");
+        comments = intent.getStringExtra("comments");
+        String url = "http://image.tmdb.org/t/p/w185" + poster;
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.image);
+        Picasso.with(getActivity()).load(url).into(imageView);
+        TextView textView = (TextView) rootView.findViewById(R.id.title);
+        textView.setText(title);
+        TextView textView1 = (TextView) rootView.findViewById(R.id.date);
+        textView1.setText(date);
+        TextView textView2 = (TextView) rootView.findViewById(R.id.rating);
+        textView2.setText(rating);
+        TextView textView3 = (TextView) rootView.findViewById(R.id.overview);
+        textView3.setText(overview);
+        TextView textView4 = (TextView) rootView.findViewById(R.id.user_comments);
+        textView4.setText(comments);
+    }
+}
+
+
+    /*public class VideoLoader extends AsyncTask<Void,Void,ArrayList<String>>{
         private ArrayList<String>youtubeLinks1;
         private ArrayList<String>youtubeLinks2;
         private ArrayList<String>id;
         private final String LOG_TAG=MainActivityFragment.class.getSimpleName();
+
         @Override
         protected ArrayList<String> doInBackground(Void... params) {
-            youtubeLinks1=new ArrayList<String>(Arrays.asList(getYoutubeVideosFromIds(id,0)));
-            youtubeLinks2=new ArrayList<String>(Arrays.asList(getYoutubeVideosFromIds(id,1)));
-            if (youtubeLinks1==null){
-                Log.d("DetailActivityFragment","Error Downloading");
-                return youtubeLinks1;
+            youtubeLinks1=new ArrayList<>(Arrays.asList(getYoutubeVideosFromIds(id,0)));
+            youtubeLinks2=new ArrayList<>(Arrays.asList(getYoutubeVideosFromIds(id,1)));
+            int nullCount=0;
+            for(int i=0;i<youtubeLinks1.size();i++){
+                if (youtubeLinks1.get(i)==null){
+                    nullCount++;
+                    youtubeLinks1.set(i,"No youtube video has been found");
+                }
             }
-            if (youtubeLinks2==null){
-                Log.d("DetailActivityFragment","Error Downloading");
-                return youtubeLinks2;
+            for (int i=0;i<youtubeLinks2.size();i++){
+                if (youtubeLinks2.get(i)==null){
+                    nullCount++;
+                    youtubeLinks2.set(i,"No youtube video has been found");
+                }
             }
-        return null;
         }
+
         public String[] getYoutubeVideosFromIds(ArrayList<String> id,int position) {
             String[] results=new String[id.size()];
             for (int i=0;i<id.size();i++){
@@ -94,9 +95,8 @@ public class DetailActivityFragment extends Fragment {
                     BufferedReader bufferedReader = null;
                     String JSONResult;
                     try {
-                        String urlString = "http://api.themoviedb.org/3/movie/" + id.get(i) + "/videos?api_key=281ad0257e71bca17a21b42c9fee7304";
-                        URL url1 = new URL(urlString);
-                        httpURLConnection = (HttpURLConnection) url1.openConnection();
+                        URL url = new URL("http://api.themoviedb.org/3/movie/" + id.get(i) + "/videos?api_key=281ad0257e71bca17a21b42c9fee7304");
+                        httpURLConnection = (HttpURLConnection) url.openConnection();
                         httpURLConnection.setRequestMethod("GET");
                         httpURLConnection.connect();
                         InputStream inputStream = httpURLConnection.getInputStream();
@@ -156,5 +156,6 @@ public class DetailActivityFragment extends Fragment {
             return resultString;
         }
 
+
     }
-}
+}*/

@@ -1,23 +1,23 @@
 package com.example.android.popularmoviesstagetwo;
 
-import android.database.Cursor;
-
 /**
  * Created by Peretz on 2016-10-13.
  */
-public class Movie {
+public class Movie{
     String mTitle;
     int mThumbnail;
     String mOverview;
     String mUserRating;
     String mReleaseDate;
+    String mYoutubeVideos;
 
-    public Movie(String title,int thumbnail,String overview,String userRating,String releaseDate) {
+    public Movie(String title,int thumbnail,String overview,String userRating,String releaseDate,String youtubeVideos) {
         mTitle=title;
         mThumbnail=thumbnail;
         mOverview=overview;
         mUserRating=userRating;
         mReleaseDate=releaseDate;
+        mYoutubeVideos=youtubeVideos;
     }
 
     public String getTitle(){
@@ -39,9 +39,7 @@ public class Movie {
     public String getUserRating(){
         return mUserRating;
     }
-
-    public static Movie fromCursor(Cursor cursor){
-        Movie movie=new Movie();
-        return movie;
+    public String getYoutubeVideos(){
+        return mYoutubeVideos;
     }
 }

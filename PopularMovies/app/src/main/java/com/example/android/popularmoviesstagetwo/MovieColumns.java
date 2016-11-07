@@ -12,23 +12,26 @@ public interface MovieColumns {
     @DataType(DataType.Type.INTEGER)
     @PrimaryKey
     @AutoIncrement
-    public static final String _ID = "_id";
+    String _ID = "_id";
     @DataType(DataType.Type.TEXT)
     @NotNull
-    public static final String TITLE = "title";
+    String TITLE = "title";
     @DataType(DataType.Type.INTEGER)
     @NotNull
-    public static final String THUMBNAIL = "thumbnail";
+    String THUMBNAIL = "thumbnail";
     @DataType(DataType.Type.INTEGER)
     @NotNull
-    public static final String RATING = "rating";
+    String RATING = "rating";
     @DataType(DataType.Type.INTEGER)
     @NotNull
-    public static final String DATE = "date";
+    String DATE = "date";
     @DataType(DataType.Type.TEXT)
     @NotNull
-    public static final String COMMENTS = "comments";
+    String COMMENTS = "comments";
     @DataType(DataType.Type.TEXT)
     @NotNull
-    public static final String YOUTUBE_LINKS = "youtube links";
+    String YOUTUBE_LINKS_1 = "youtube links 1";
+    @DataType(DataType.Type.TEXT)
+    @NotNull
+    String YOUTUBE_LINKS_2="youtube links 2";
 }
