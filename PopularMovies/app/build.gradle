@@ -1,15 +1,23 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
+    buildscript{
+        repositories{
+            mavenCentral()
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.android.popularmoviesstagetwo"
-        minSdkVersion 10
+        minSdkVersion 20
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -25,5 +33,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:design:24.0.0'
-
 }

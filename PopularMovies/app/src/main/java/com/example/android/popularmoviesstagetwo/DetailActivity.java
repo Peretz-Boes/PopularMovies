@@ -55,13 +55,14 @@ public class DetailActivity extends AppCompatActivity {
             button.setText("Unfavourite movie");
             button.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
             ContentValues contentValues=new ContentValues();
-            contentValues.put(MovieColumns.TITLE,DetailActivityFragment.title);
-            contentValues.put(MovieColumns.THUMBNAIL,DetailActivityFragment.poster);
-            contentValues.put(MovieColumns.RATING,DetailActivityFragment.rating);
-            contentValues.put(MovieColumns.DATE,DetailActivityFragment.date);
-            contentValues.put(MovieColumns.COMMENTS,DetailActivityFragment.comments);
-            contentValues.put(MovieColumns.YOUTUBE_LINKS_1,DetailActivityFragment.youtubeLinks1);
-            contentValues.put(MovieColumns.YOUTUBE_LINKS_2,DetailActivityFragment.youtubeLinks2);
+            contentValues.put(MovieContract.MovieEntry.TITLES,DetailActivityFragment.title);
+            contentValues.put(MovieContract.MovieEntry.THUMBNAIL_IMAGE,DetailActivityFragment.poster);
+            contentValues.put(MovieContract.MovieEntry.USER_RATING,DetailActivityFragment.rating);
+            contentValues.put(MovieContract.MovieEntry.RELEASE_DATE,DetailActivityFragment.date);
+            contentValues.put(MovieContract.MovieEntry.USER_COMMENTS,DetailActivityFragment.comments);
+            contentValues.put(MovieContract.MovieEntry.YOUTUBE_LINKS_1,DetailActivityFragment.youtubeLinks1);
+            contentValues.put(MovieContract.MovieEntry.YOUTUBE_LINKS_2,DetailActivityFragment.youtubeLinks2);
+            getContentResolver().insert(MovieContract.BASE_CONTENT_URI,contentValues);
         }else {
             button.setText("Favourite movie");
             button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);

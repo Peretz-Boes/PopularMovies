@@ -530,15 +530,15 @@ public class MainActivityFragment extends Fragment {
             return;
         }
         while (cursor.moveToNext()){
-            favouritePosters.add(cursor.getString(cursor.getColumnIndex(MovieProvider.CONTENT_PROVIDER_NAME)));
+            favouritePosters.add(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.TITLES)));
+            favouriteComments.add(makeStringArrayList(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.TITLES))));
+            favouriteTitles.add(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.TITLES)));
+            favouriteOverviews.add(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.TITLES)));
+            favouriteYoutubeLinks.add(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.TITLES)));
+            favouriteYoutubeLinks2.add(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.TITLES)));
+            favouriteDates.add(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.TITLES)));
+            favouriteRatings.add(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.TITLES)));
             favouritedMovies.add(true);
-            favouriteComments.add(makeStringArrayList(cursor.getString(cursor.getColumnIndex(MovieProvider.CONTENT_PROVIDER_NAME))));
-            favouriteTitles.add(cursor.getString(cursor.getColumnIndex(MovieProvider.CONTENT_PROVIDER_NAME)));
-            favouriteOverviews.add(cursor.getString(cursor.getColumnIndex(MovieProvider.CONTENT_PROVIDER_NAME)));
-            favouriteYoutubeLinks.add(cursor.getString(cursor.getColumnIndex(MovieProvider.CONTENT_PROVIDER_NAME)));
-            favouriteYoutubeLinks2.add(cursor.getString(cursor.getColumnIndex(MovieProvider.CONTENT_PROVIDER_NAME)));
-            favouriteDates.add(cursor.getString(cursor.getColumnIndex(MovieProvider.CONTENT_PROVIDER_NAME)));
-            favouriteRatings.add(cursor.getString(cursor.getColumnIndex(MovieProvider.CONTENT_PROVIDER_NAME)));
         }
     }
     public ArrayList<String>makeStringArrayList(String string){

@@ -1,6 +1,5 @@
 package com.example.android.popularmoviesstagetwo;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
@@ -57,15 +56,6 @@ public class PosterAdapter extends BaseAdapter {
             return cursor.getLong(idRowColumn);
         }
         return 0;
-    }
-
-    public void onMovieDismiss(int position){
-        long cursorId=getItemId(position);
-        Cursor cursor=getCursor();
-        ContentValues contentValues=new ContentValues();
-        contentValues.put(ArchivedMovieColumns.TITLE,cursor.getString(cursor.getColumnIndex(MovieColumns.TITLE)));
-        contentValues.put(ArchivedMovieColumns.RATING,cursor.getDouble(cursor.getColumnIndex(MovieColumns.RATING)));
-        contentValues.put(ArchivedMovieColumns.THUMBNAIL,cursor.getInt(cursor.getColumnIndex(MovieColumns.THUMBNAIL)));
     }
 
     @Override
