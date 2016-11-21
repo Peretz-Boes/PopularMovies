@@ -164,9 +164,9 @@ public class MainActivityFragment extends Fragment {
 
     public ArrayList<Boolean>bindFavouritesDataToMoviesData(){
         ArrayList<Boolean>results=new ArrayList<>();
-        for (int i=0;i<title.size();i++){
-            results.add(false);
-        }
+            for (int i = 0; i < title.size(); i++) {
+                results.add(false);
+            }
         for(String favouritedTitles:favouriteTitles){
             for(int i=0;i<favouriteTitles.size();i++){
                 if(favouritedTitles.equals(title.get(i))){
@@ -180,7 +180,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        loadFavouriteMoviesData();
+        if (favouritedMovies!=null){
+            loadFavouriteMoviesData();
+        }
         if (images == null) {
             connectToInternet();
         }

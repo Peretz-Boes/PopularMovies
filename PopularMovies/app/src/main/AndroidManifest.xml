@@ -38,7 +38,7 @@
         </activity>
         <provider
             android:authorities="com.example.android.popularmoviesstagetwo.MovieProvider"
-            android:name="com.example.android.popularmoviesstagetwo.app"/>
+            android:name="MovieProvider"/>
     </application>
 
 </manifest>
