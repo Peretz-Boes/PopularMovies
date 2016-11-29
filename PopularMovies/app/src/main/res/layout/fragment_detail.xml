@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,9 +7,13 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.android.popularmovies.DetailActivityFragment"
-    tools:showIn="@layout/activity_detail"
-    android:id="@+id/container"
-    android:orientation="vertical">
+    tools:showIn="@layout/activity_detail">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/container"
+        android:orientation="vertical">
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,15 +47,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Favourite movie"
+        android:textAllCaps="false"
         android:onClick="favouriteMovie"/>
     <Button
         android:id="@+id/play_trailer_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Play a trailer"
+        android:textAllCaps="false"
         android:onClick="playTrailer1"/>
     <Button
         android:id="@+id/play_second_trailer_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Play another trailer"
+        android:textAllCaps="false"
         android:onClick="playTrailer2"/>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

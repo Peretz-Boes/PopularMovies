@@ -13,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class DetailActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,9 +32,9 @@ public class DetailActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        if (savedInstanceState==null){
-            getSupportFragmentManager().beginTransaction().add(R.id.container,new DetailActivityFragment()).commit();
-        }
+//        if (savedInstanceState==null){
+//            getSupportFragmentManager().beginTransaction().add(R.id.container,new DetailActivityFragment()).commit();
+//        }
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -49,6 +51,7 @@ public class DetailActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     public void favouriteMovie(View view){
         Button button=(Button)findViewById(R.id.favourite_movie_button);
         if(button.getText().equals("Favourite movie")){
@@ -60,13 +63,21 @@ public class DetailActivity extends AppCompatActivity {
             contentValues.put(MovieContract.MovieEntry.USER_RATING,DetailActivityFragment.rating);
             contentValues.put(MovieContract.MovieEntry.RELEASE_DATE,DetailActivityFragment.date);
             contentValues.put(MovieContract.MovieEntry.USER_COMMENTS,DetailActivityFragment.comments);
-            contentValues.put(MovieContract.MovieEntry.YOUTUBE_LINKS_1,DetailActivityFragment.youtubeLinks1);
-            contentValues.put(MovieContract.MovieEntry.YOUTUBE_LINKS_2,DetailActivityFragment.youtubeLinks2);
+            if(DetailActivityFragment.youtubeLinks1!=null) {
+                contentValues.put(MovieContract.MovieEntry.YOUTUBE_LINKS_1, DetailActivityFragment.youtubeLinks1.indexOf(MovieContract.MovieEntry.YOUTUBE_LINKS_1));
+            }else {
+                Toast.makeText(DetailActivity.this,"No youtube video is available",Toast.LENGTH_LONG).show();
+            }
+            if(DetailActivityFragment.youtubeLinks2!=null) {
+                contentValues.put(MovieContract.MovieEntry.YOUTUBE_LINKS_2, DetailActivityFragment.youtubeLinks2.indexOf(MovieContract.MovieEntry.YOUTUBE_LINKS_2));
+            }else {
+                Toast.makeText(DetailActivity.this,"No youtube video is available",Toast.LENGTH_LONG).show();
+            }
             getContentResolver().insert(MovieContract.BASE_CONTENT_URI,contentValues);
         }else {
             button.setText("Favourite movie");
             button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-            getContentResolver().delete(Uri.parse("com.example.android.popularmoviesstagetwo.MovieProvider"),"title=?",new String[]{DetailActivityFragment.title});
+            getContentResolver().delete(Uri.parse("com.example.android.popularmoviesstagetwo.MovieProvider"), "title=?", new String[]{DetailActivityFragment.title});
         }
     }
     public void playTrailer1(View view){
@@ -77,4 +88,5 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+MainActivityFragment.youtubeLinks2));
         startActivity(intent);
     }
+
 }

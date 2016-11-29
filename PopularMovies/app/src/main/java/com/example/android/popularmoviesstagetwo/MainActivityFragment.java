@@ -49,6 +49,8 @@ public class MainActivityFragment extends Fragment {
     static ArrayList<String> title;
     static ArrayList<String> date;
     static ArrayList<String> rating;
+    static ArrayList<String> youtubeLinks1;
+    static ArrayList<String> youtubeLinks2;
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
     static PreferenceChangeListener preferenceChangeListener;
     static SharedPreferences sharedPreferences;
@@ -67,22 +69,10 @@ public class MainActivityFragment extends Fragment {
     private static final int CURSOR_LOADER_ID = 0;
     PosterAdapter posterAdapter;
     private CursorAdapter cursorAdapter;
-    static ArrayList<String> youtubeLinks1;
-    static ArrayList<String> youtubeLinks2;
 
     public MainActivityFragment() {
     }
 
-    /*@Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        Cursor cursor=getActivity().getContentResolver().query(MovieProvider.Movies.CONTENT_URI,null,null,null,null);
-        Log.i(LOG_TAG, "cursor count: " + cursor.getCount());
-        if (cursor==null||cursor.getCount()==0){
-            insertMovie();
-        }
-        getLoaderManager().initLoader(CURSOR_LOADER_ID,null,this);
-        super.onActivityCreated(savedInstanceState);
-    }*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -114,7 +104,6 @@ public class MainActivityFragment extends Fragment {
                             .putExtra("title", title.get(position))
                             .putExtra("date", date.get(position))
                             .putExtra("rating", rating.get(position))
-                            .putExtra("comments", userComments.get(position))
                             .putExtra("favourited", favouritedMovies.get(position));
                     startActivity(intent);
                 } else {
@@ -124,7 +113,7 @@ public class MainActivityFragment extends Fragment {
                             .putExtra("title", title.get(position))
                             .putExtra("date", date.get(position))
                             .putExtra("rating", rating.get(position))
-                            .putExtra("comments", userComments.get(position))
+                            //.putExtra("comments", userComments.get(position))
                             .putExtra("favourited", favouritedMovies.get(position));
                     startActivity(intent);
                 }
@@ -133,25 +122,6 @@ public class MainActivityFragment extends Fragment {
         });
         return rootView;
     }
-
-    /*public void insertMovie(){
-        Log.d(LOG_TAG, "inserting movie");
-        ArrayList<ContentProviderOperation>batchOperations=new ArrayList<>(favouritePosters.size());
-        for (Movie movie:favouritePosters){
-            ContentProviderOperation.Builder builder=ContentProviderOperation.newInsert(MovieProvider.Movies.CONTENT_URI);
-            builder.withValue(MovieColumns.TITLE,movie.getTitle());
-            builder.withValue(MovieColumns.RATING,movie.getUserRating());
-            builder.withValue(MovieColumns.THUMBNAIL,movie.getThumbnail());
-            batchOperations.add(builder.build());
-        }
-
-        try {
-            getActivity().getContentResolver().applyBatch(MovieProvider.AUTHORITY,batchOperations);
-        }catch (RemoteException| OperationApplicationException e){
-            Log.e(LOG_TAG,"Error applying batch insert",e);
-        }
-    }
-    */
 
     private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -167,10 +137,12 @@ public class MainActivityFragment extends Fragment {
             for (int i = 0; i < title.size(); i++) {
                 results.add(false);
             }
-        for(String favouritedTitles:favouriteTitles){
-            for(int i=0;i<favouriteTitles.size();i++){
-                if(favouritedTitles.equals(title.get(i))){
-                    results.set(i,true);
+        if (favouriteTitles!=null) {
+            for (String favouritedTitles : favouriteTitles) {
+                for (int i = 0; i < favouriteTitles.size(); i++) {
+                    if (favouritedTitles.equals(title.get(i))) {
+                        results.set(i, true);
+                    }
                 }
             }
         }
@@ -216,12 +188,9 @@ public class MainActivityFragment extends Fragment {
         }
 
         public String[] getMovieDataFromApi(boolean sortByPopular) {
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
+
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-
-            // Will contain the raw JSON response as a string.
             String movieJsonString;
 
             try {
@@ -232,12 +201,11 @@ public class MainActivityFragment extends Fragment {
                     url = new URL("http://api.themoviedb.org/3/movie/top_rated?api_key=281ad0257e71bca17a21b42c9fee7304");
                 }
 
-                // Create the request to OpenWeatherMap, and open the connection
+
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
-                // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
@@ -248,14 +216,11 @@ public class MainActivityFragment extends Fragment {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
+
                     buffer.append(line + "\n");
                 }
 
                 if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
                     movieJsonString = null;
                 }
                 movieJsonString = buffer.toString();
@@ -265,35 +230,12 @@ public class MainActivityFragment extends Fragment {
                     rating = new ArrayList<>(Arrays.asList(getStringDataFromJSON(movieJsonString, "vote_average")));
                     date=new ArrayList<>(Arrays.asList(getStringDataFromJSON(movieJsonString,"release_date")));
                     id=new ArrayList<>(Arrays.asList(getStringDataFromJSON(movieJsonString,"id")));
-                    while (true) {
-                        youtubeLinks1 = new ArrayList<>(Arrays.asList(getYoutubeVideosFromIds(id, 0)));
-                        youtubeLinks2=new ArrayList<>(Arrays.asList(getYoutubeVideosFromIds(id,1)));
-                        int nullCount=0;
-                        for(int i=0;i<youtubeLinks1.size();i++){
-                            if (youtubeLinks1.get(i)==null){
-                                nullCount++;
-                                youtubeLinks1.set(i,"No youtube video has been found");
-                            }
-                        }
-                        for (int i=0;i<youtubeLinks2.size();i++){
-                            if (youtubeLinks2.get(i)==null){
-                                nullCount++;
-                                youtubeLinks2.set(i,"No youtube video has been found");
-                            }
-                        }
-                        if (nullCount>2){
-                            break;
-                        }
-                        userComments=getUserReviewsFromIds(id);
-                        return getMovieDataFromJson(movieJsonString);
-                    }
+                       return getMovieDataFromJson(movieJsonString);
                 } catch (Exception e) {
                     System.out.println("Error");
                 }
             } catch (IOException e) {
                 Log.e("PlaceholderFragment", "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attempting
-                // to parse it.
                 movieJsonString = null;
             } finally {
                 if (urlConnection != null) {
@@ -327,142 +269,6 @@ public class MainActivityFragment extends Fragment {
             results[i] = posterPath;
         }
         return results;
-    }
-
-    public String[]getYoutubeVideosFromIds(ArrayList<String>id,int position){
-        String[] results=new String[id.size()];
-        for (int i=0;i<id.size();i++){
-            while (true) {
-                HttpURLConnection httpURLConnection = null;
-                BufferedReader bufferedReader = null;
-                String JSONResult;
-                try {
-                    URL url = new URL("http://api.themoviedb.org/3/movie/" + id.get(i) + "/videos?api_key=281ad0257e71bca17a21b42c9fee7304");
-                    httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setRequestMethod("GET");
-                    httpURLConnection.connect();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    StringBuffer stringBuffer = new StringBuffer();
-                    if (inputStream == null) {
-                        return null;
-                    }
-                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    String data;
-                    while ((data = bufferedReader.readLine()) != null) {
-                        stringBuffer.append(data + "\n");
-                    }
-                    if (stringBuffer.length() == 0) {
-                        return null;
-                    }
-                    JSONResult = stringBuffer.toString();
-                    Log.v(LOG_TAG, JSONResult);
-                    try {
-                        results[i]=getYoutubeVideosFromJSON(JSONResult,position);
-                    }catch (JSONException E){
-                        results[i]="no video found";
-                    }
-                }catch (Exception e){
-
-                }finally {
-                    if (httpURLConnection!=null){
-                        httpURLConnection.disconnect();
-                    }
-                    if (bufferedReader!=null){
-                        try {
-                            bufferedReader.close();
-                        }catch (final IOException e){
-
-                        }
-                    }
-                }
-            }
-        }
-        return results;
-    }
-
-    public ArrayList<ArrayList<String>>getUserReviewsFromIds(ArrayList<String>id){
-        outerloop:
-        while (true){
-            ArrayList<ArrayList<String>>results=new ArrayList<>();
-            for (int i=0;i<id.size();i++){
-                HttpURLConnection httpURLConnection=null;
-                BufferedReader bufferedReader=null;
-                String JSONResult;
-                try {
-                    URL url = new URL("http://api.themoviedb.org/3/movie/" + id.get(i) + "/reviews?api_key=281ad0257e71bca17a21b42c9fee7304");
-                    httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setRequestMethod("GET");
-                    httpURLConnection.connect();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    StringBuffer stringBuffer = new StringBuffer();
-                    if (inputStream == null) {
-                        return null;
-                    }
-                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    String data;
-                    while ((data = bufferedReader.readLine()) != null) {
-                        stringBuffer.append(data + "\n");
-                    }
-                    if (stringBuffer.length() == 0) {
-                        return null;
-                    }
-                    JSONResult = stringBuffer.toString();
-                    Log.v(LOG_TAG, JSONResult);
-                    try {
-                        results.add(getUserReviewsFromJSON(JSONResult));
-                    }catch (JSONException E){
-                        return null;
-                    }
-                }catch (Exception e){
-                    continue outerloop;
-                }finally {
-                    if (httpURLConnection!=null){
-                        httpURLConnection.disconnect();
-                    }
-                    if (bufferedReader!=null){
-                        try {
-                            bufferedReader.close();
-                        }catch (final IOException e){
-
-                        }
-                    }
-                }
-            }
-            return results;
-        }
-    }
-    public ArrayList<String>getUserReviewsFromJSON(String JSONStringParameter)throws JSONException{
-        JSONObject jsonObject=new JSONObject(JSONStringParameter);
-        JSONArray jsonArray=jsonObject.getJSONArray("results");
-        ArrayList<String>results=new ArrayList<>();
-        if (jsonArray.length()==0){
-            results.add("There are no reviews for this movie");
-            return results;
-        }
-        for (int i=0;i<jsonArray.length();i++){
-            JSONObject resultObject=jsonArray.getJSONObject(i);
-            results.add(resultObject.getString("content"));
-        }
-        return results;
-    }
-
-    public String getYoutubeVideosFromJSON(String JSONStringParameter,int position)throws JSONException{
-        JSONObject jsonObject=new JSONObject(JSONStringParameter);
-        JSONArray jsonArray=jsonObject.getJSONArray("results");
-        JSONObject jsonObject1;
-        String resultString="no videos have been found";
-        if (position==0){
-            jsonObject1=jsonArray.getJSONObject(0);
-            resultString=jsonObject1.getString("key");
-        }else if (position==1){
-            if (jsonArray.length()>1){
-                jsonObject1=jsonArray.getJSONObject(1);
-            }else {
-                jsonObject1=jsonArray.getJSONObject(0);
-            }
-            resultString=jsonObject1.getString("key");
-        }
-        return resultString;
     }
 
     public void connectToInternet(){
@@ -550,7 +356,7 @@ public class MainActivityFragment extends Fragment {
 
     public String[]getStringDataFromJSON(String JSONStringParameter,String parameter) throws JSONException{
         JSONObject jsonObject=new JSONObject(JSONStringParameter);
-        JSONArray jsonArray=new JSONArray("results");
+        JSONArray jsonArray=jsonObject.getJSONArray("results");
         String[]results=new String[jsonArray.length()];
         for(int i=0;i<jsonArray.length();i++){
             JSONObject object=jsonArray.getJSONObject(i);
