@@ -154,6 +154,7 @@ public class MainActivityFragment extends Fragment {
         super.onStart();
         if (favouritedMovies!=null){
             loadFavouriteMoviesData();
+            Log.v(LOG_TAG,"Calling load favourited movies data");
         }
         if (images == null) {
             connectToInternet();
@@ -326,7 +327,6 @@ public class MainActivityFragment extends Fragment {
         Cursor cursor=getActivity().getContentResolver().query(favouritedMoviesUri,null,null,null,"title");
         favouritePosters=new ArrayList<>();
         favouriteComments=new ArrayList<>();
-        favouritePosters=new ArrayList<>();
         favouriteDates=new ArrayList<>();
         favouriteOverviews=new ArrayList<>();
         favouritedMovies=new ArrayList<>();

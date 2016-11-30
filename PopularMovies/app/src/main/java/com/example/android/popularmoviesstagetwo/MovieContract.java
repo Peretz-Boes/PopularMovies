@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
  * Created by Peretz on 2016-11-15.
  */
 public class MovieContract {
-    public static final String CONTENT_AUTHORITY="com.example.android.popularmoviesstagetwo.app";
+    public static final String CONTENT_AUTHORITY="com.example.android.popularmoviesstagetwo.MovieProvider";
     public static final Uri BASE_CONTENT_URI=Uri.parse("content://"+CONTENT_AUTHORITY);
 
     public static final class MovieEntry implements BaseColumns{

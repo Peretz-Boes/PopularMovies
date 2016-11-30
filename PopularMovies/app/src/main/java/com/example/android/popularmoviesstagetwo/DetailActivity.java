@@ -10,12 +10,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 public class DetailActivity extends AppCompatActivity {
+
+    public static final String LOG_TAG=DetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +35,7 @@ public class DetailActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-//        if (savedInstanceState==null){
-//            getSupportFragmentManager().beginTransaction().add(R.id.container,new DetailActivityFragment()).commit();
-//        }
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -81,12 +82,22 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
     public void playTrailer1(View view){
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+MainActivityFragment.youtubeLinks1));
-        startActivity(intent);
+        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+DetailActivityFragment.youtubeLinks1));
+        Log.v(LOG_TAG, "The video URL is " + Uri.parse("http://www.youtube.com/watch?v=" + DetailActivityFragment.youtubeLinks1));
+        if (DetailActivityFragment.youtubeLinks1!=null) {
+            startActivity(intent);
+        }else {
+            Toast.makeText(DetailActivity.this,"No youtube video is available",Toast.LENGTH_LONG).show();
+        }
     }
     public void playTrailer2(View view){
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+MainActivityFragment.youtubeLinks2));
-        startActivity(intent);
+        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+DetailActivityFragment.youtubeLinks2));
+        Log.v(LOG_TAG, "The video URL is " + Uri.parse("http://www.youtube.com/watch?v=" + DetailActivityFragment.youtubeLinks2));
+        if(DetailActivityFragment.youtubeLinks2!=null) {
+            startActivity(intent);
+        }else {
+            Toast.makeText(DetailActivity.this,"No youtube video is available",Toast.LENGTH_LONG).show();
+        }
     }
 
 }
