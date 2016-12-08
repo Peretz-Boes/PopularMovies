@@ -74,7 +74,7 @@ public class DetailActivity extends AppCompatActivity {
             }else {
                 Toast.makeText(DetailActivity.this,"No youtube video is available",Toast.LENGTH_LONG).show();
             }
-            getContentResolver().insert(MovieContract.BASE_CONTENT_URI,contentValues);
+            getContentResolver().insert(MovieContract.BASE_CONTENT_URI,contentValues);//error at this line
         }else {
             button.setText("Favourite movie");
             button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);

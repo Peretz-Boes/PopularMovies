@@ -6,8 +6,10 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by Peretz on 2016-10-16.
@@ -19,6 +21,12 @@ public final class MovieProvider extends ContentProvider {
 
     private static final int MOVIE=100;
     private static final int MOVIE_WITH_ID=200;
+    public static final SQLiteQueryBuilder sqLiteQueryBuilder;
+
+    static {
+        sqLiteQueryBuilder=new SQLiteQueryBuilder();
+        sqLiteQueryBuilder.setTables(MovieContract.MovieEntry.FAVOURITED_MOVIES);
+    }
 
     private static UriMatcher buildUriMatcher(){
         final UriMatcher matcher=new UriMatcher(UriMatcher.NO_MATCH);
@@ -37,18 +45,19 @@ public final class MovieProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Log.v(LOG_TAG,"Attempting to query for uri"+uri);
+        final String movieQuerySelection= MovieContract.MovieEntry.FAVOURITED_MOVIES+"."+MovieContract.MovieEntry._ID+"="+MovieContract.MovieEntry.getMovieUri(uri);
         Cursor retCursor;
         switch (sUriMatcher.match(uri)){
             case MOVIE :
-                retCursor = moviesDatabaseHelper.getReadableDatabase().query(MovieContract.MovieEntry.FAVOURITED_MOVIES, projection, selection, selectionArgs, null, null, sortOrder);
-                return retCursor;
-
+                Log.v(LOG_TAG,"Successfully got query for all movies");
+                return sqLiteQueryBuilder.query(moviesDatabaseHelper.getReadableDatabase(),null,null,null,null,null,null);
             case MOVIE_WITH_ID:
-                retCursor=moviesDatabaseHelper.getReadableDatabase().query(MovieContract.MovieEntry.FAVOURITED_MOVIES,projection,MovieContract.MovieEntry._ID+"=?",new String[]{String.valueOf(ContentUris.parseId(uri))},null,null,sortOrder);
-                return retCursor;
-
+                Log.v(LOG_TAG,"Successfully got query for movie with id "+getMovieId(uri));
+                return sqLiteQueryBuilder.query(moviesDatabaseHelper.getReadableDatabase(),null,movieQuerySelection,new String[]{},null,null,null);
             default:
-                throw new UnsupportedOperationException("Unknown uri"+uri);
+                Log.w(LOG_TAG,"No match found for uri"+uri);
+                return null;
         }
 
     }
@@ -70,7 +79,7 @@ public final class MovieProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        final SQLiteDatabase sqLiteDatabase=moviesDatabaseHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase=moviesDatabaseHelper.getWritableDatabase();
         Uri returnUri;
         switch (sUriMatcher.match(uri)){
             case MOVIE:
@@ -90,7 +99,7 @@ public final class MovieProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        final SQLiteDatabase sqLiteDatabase=moviesDatabaseHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase=moviesDatabaseHelper.getWritableDatabase();
         final int match=sUriMatcher.match(uri);
         int numberDeleted;
         switch (match){
@@ -110,7 +119,7 @@ public final class MovieProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
-        final SQLiteDatabase sqLiteDatabase=moviesDatabaseHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase=moviesDatabaseHelper.getWritableDatabase();
         int numberUpdated=0;
         if (contentValues==null){
             throw new IllegalArgumentException("Cannot have null content values");
@@ -130,4 +139,9 @@ public final class MovieProvider extends ContentProvider {
         }
         return numberUpdated;
     }
+
+    private String getMovieId(Uri uri){
+        return uri.getLastPathSegment();
+    }
+
 }

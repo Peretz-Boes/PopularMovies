@@ -19,10 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,8 +49,6 @@ public class MainActivityFragment extends Fragment {
     static ArrayList<String> title;
     static ArrayList<String> date;
     static ArrayList<String> rating;
-    static ArrayList<String> youtubeLinks1;
-    static ArrayList<String> youtubeLinks2;
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
     static PreferenceChangeListener preferenceChangeListener;
     static SharedPreferences sharedPreferences;
@@ -65,10 +63,7 @@ public class MainActivityFragment extends Fragment {
     static ArrayList<String> favouriteRatings;
     static ArrayList<String> id;
     static ArrayList<Boolean> favouritedMovies;
-    static ArrayList<ArrayList<String>> userComments;
-    private static final int CURSOR_LOADER_ID = 0;
-    PosterAdapter posterAdapter;
-    private CursorAdapter cursorAdapter;
+    static Boolean sortByPopularValue;
 
     public MainActivityFragment() {
     }
@@ -198,8 +193,10 @@ public class MainActivityFragment extends Fragment {
                 URL url;
                 if (sortByPopular) {
                     url = new URL("http://api.themoviedb.org/3/movie/popular?api_key=281ad0257e71bca17a21b42c9fee7304");
+                    sortByPopularValue=true;
                 } else {
                     url = new URL("http://api.themoviedb.org/3/movie/top_rated?api_key=281ad0257e71bca17a21b42c9fee7304");
+                    sortByPopularValue=false;
                 }
 
 
@@ -230,8 +227,8 @@ public class MainActivityFragment extends Fragment {
                     title = new ArrayList<>(Arrays.asList(getStringDataFromJSON(movieJsonString, "original_title")));
                     rating = new ArrayList<>(Arrays.asList(getStringDataFromJSON(movieJsonString, "vote_average")));
                     date=new ArrayList<>(Arrays.asList(getStringDataFromJSON(movieJsonString,"release_date")));
-                    id=new ArrayList<>(Arrays.asList(getStringDataFromJSON(movieJsonString,"id")));
-                       return getMovieDataFromJson(movieJsonString);
+                    id=new ArrayList<>(Arrays.asList(getStringDataFromJSON(movieJsonString, "id")));
+                    return getMovieDataFromJson(movieJsonString);
                 } catch (Exception e) {
                     System.out.println("Error");
                 }
@@ -289,22 +286,19 @@ public class MainActivityFragment extends Fragment {
         TextView noFavouritedMoviestextView=new TextView(getActivity());
         RelativeLayout relativeLayout=(RelativeLayout)getActivity().findViewById(R.id.fragment_layout);
         if (sortByFavouriteMovies){
-            if (favouritePosters.size()==0){
-                noFavouritedMoviestextView.setText("You have not favourited any movies");
-                if (relativeLayout.getChildCount()==1){
-                    relativeLayout.addView(noFavouritedMoviestextView);
-                    imageGridView.setVisibility(View.GONE);
-                }else {
+            if (favouritePosters!=null) {
+                if (favouritePosters.size() == 0) {
+                    noFavouritedMoviestextView.setText("You have not favourited any movies");
+                    if (favouritePosters != null && getActivity() != null) {
+                        PosterAdapter posterAdapter = new PosterAdapter(getActivity(), favouritePosters, deviceWidth);
+                        imageGridView.setAdapter(posterAdapter);
+                    }
+                } else {
                     imageGridView.setVisibility(View.VISIBLE);
                     relativeLayout.removeView(noFavouritedMoviestextView);
                 }
-                if (favouritePosters!=null&&getActivity()!=null){
-                    PosterAdapter posterAdapter=new PosterAdapter(getActivity(),favouritePosters,deviceWidth);
-                    imageGridView.setAdapter(posterAdapter);
-                }
             }else {
-                imageGridView.setVisibility(View.VISIBLE);
-                relativeLayout.removeView(noFavouritedMoviestextView);
+                Toast.makeText(getContext(),"Favourite movies is null",Toast.LENGTH_LONG).show();
             }
         }
 
@@ -324,7 +318,7 @@ public class MainActivityFragment extends Fragment {
     public void loadFavouriteMoviesData(){
         String contentProviderURL="content://com.example.android.popularmoviesstagetwo.MovieProvider";
         Uri favouritedMoviesUri=Uri.parse(contentProviderURL);
-        Cursor cursor=getActivity().getContentResolver().query(favouritedMoviesUri,null,null,null,"title");
+        Cursor cursor=getActivity().getContentResolver().query(favouritedMoviesUri,null,null,null,"title");//error at this line
         favouritePosters=new ArrayList<>();
         favouriteComments=new ArrayList<>();
         favouriteDates=new ArrayList<>();

@@ -32,5 +32,9 @@ public class MovieContract {
             return ContentUris.withAppendedId(CONTENT_URI,id);
         }
 
+        public static String getMovieUri(Uri uri){
+            return uri.getLastPathSegment();
+        }
+
     }
 }
