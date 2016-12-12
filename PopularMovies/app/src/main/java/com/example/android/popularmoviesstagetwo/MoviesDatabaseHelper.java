@@ -34,7 +34,8 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper{
                 +MovieContract.MovieEntry.USER_COMMENTS+" TEXT,"
                 +MovieContract.MovieEntry.USER_RATING+" REAL,"
                 +MovieContract.MovieEntry.YOUTUBE_LINKS_1+" TEXT,"
-                +MovieContract.MovieEntry.YOUTUBE_LINKS_2+" TEXT,";
+                +MovieContract.MovieEntry.YOUTUBE_LINKS_2+" TEXT"
+                +")";
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIES_TABLE);
     }
 

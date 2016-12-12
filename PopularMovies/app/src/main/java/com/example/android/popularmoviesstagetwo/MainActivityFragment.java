@@ -22,7 +22,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -298,7 +297,7 @@ public class MainActivityFragment extends Fragment {
                     relativeLayout.removeView(noFavouritedMoviestextView);
                 }
             }else {
-                Toast.makeText(getContext(),"Favourite movies is null",Toast.LENGTH_LONG).show();
+                noFavouritedMoviestextView.setText("Your list of favourited movies is null");
             }
         }
 
