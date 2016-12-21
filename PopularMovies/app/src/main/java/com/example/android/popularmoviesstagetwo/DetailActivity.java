@@ -74,11 +74,11 @@ public class DetailActivity extends AppCompatActivity {
             }else {
                 Toast.makeText(DetailActivity.this,"No youtube video is available",Toast.LENGTH_LONG).show();
             }
-            getContentResolver().insert(MovieContract.BASE_CONTENT_URI,contentValues);//error at this line
+            getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,contentValues);
         }else {
             button.setText("Favourite movie");
             button.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-            getContentResolver().delete(Uri.parse("com.example.android.popularmoviesstagetwo.MovieProvider"), "title=?", new String[]{DetailActivityFragment.title});
+            getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, "title=?", new String[]{DetailActivityFragment.title});
         }
     }
     public void playTrailer1(View view){

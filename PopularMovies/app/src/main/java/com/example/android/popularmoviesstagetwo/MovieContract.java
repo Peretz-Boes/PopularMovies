@@ -22,7 +22,8 @@ public class MovieContract {
         public static final String USER_COMMENTS="comments";
         public static final String OVERVIEW="overview";
         public static final String TITLES="title";
-        public static final String RELEASE_DATE="release date";
+        public static final String RELEASE_DATE="release_date";
+        public static final String MOVIE_ID="movie_id";
 
         public static Uri CONTENT_URI=BASE_CONTENT_URI.buildUpon().appendPath(FAVOURITED_MOVIES).build();
         public static final String CONTENT_DIR_TYPE= ContentResolver.CURSOR_DIR_BASE_TYPE+"/"+CONTENT_AUTHORITY+"/"+FAVOURITED_MOVIES;

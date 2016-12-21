@@ -105,11 +105,9 @@ public final class MovieProvider extends ContentProvider {
         switch (match){
             case MOVIE:
                 numberDeleted=sqLiteDatabase.delete(MovieContract.MovieEntry.FAVOURITED_MOVIES,selection,selectionArgs);
-                sqLiteDatabase.execSQL("DELETE FROM SQL SEQUENCE WHERE NAME ='"+MovieContract.MovieEntry.FAVOURITED_MOVIES+"'");
                 break;
             case MOVIE_WITH_ID:
                 numberDeleted=sqLiteDatabase.delete(MovieContract.MovieEntry.FAVOURITED_MOVIES,MovieContract.MovieEntry._ID+"=?",new String[]{String.valueOf(ContentUris.parseId(uri))});
-                sqLiteDatabase.execSQL("DELETE FROM SQL SEQUENCE WHERE NAME='"+MovieContract.MovieEntry.FAVOURITED_MOVIES+"'");
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri"+uri);
@@ -120,7 +118,7 @@ public final class MovieProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
         SQLiteDatabase sqLiteDatabase=moviesDatabaseHelper.getWritableDatabase();
-        int numberUpdated=0;
+        int numberUpdated;
         if (contentValues==null){
             throw new IllegalArgumentException("Cannot have null content values");
         }
