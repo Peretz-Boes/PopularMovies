@@ -1,45 +1,21 @@
 package com.example.android.popularmoviesstagetwo;
 
 /**
- * Created by Peretz on 2016-10-13.
+ * Created by Peretz on 2016-12-22.
  */
-public class Movie{
-    String mTitle;
-    int mThumbnail;
-    String mOverview;
-    String mUserRating;
-    String mReleaseDate;
-    String mYoutubeVideos;
+public class Movie {
 
-    public Movie(String title,int thumbnail,String overview,String userRating,String releaseDate,String youtubeVideos) {
-        mTitle=title;
-        mThumbnail=thumbnail;
-        mOverview=overview;
-        mUserRating=userRating;
-        mReleaseDate=releaseDate;
-        mYoutubeVideos=youtubeVideos;
-    }
+    String overview;
+    String title;
+    String date;
+    String posterPath;
+    String rating;
 
-    public String getTitle(){
-        return mTitle;
-    }
-
-    public int getThumbnail(){
-        return mThumbnail;
-    }
-
-    public String getReleaseDate(){
-        return mReleaseDate;
-    }
-
-    public String getOverview(){
-        return mOverview;
-    }
-
-    public String getUserRating(){
-        return mUserRating;
-    }
-    public String getYoutubeVideos(){
-        return mYoutubeVideos;
+    public Movie(String date, String overview, String posterPath, String rating, String title) {
+        this.date = date;
+        this.overview = overview;
+        this.posterPath = posterPath;
+        this.rating = rating;
+        this.title = title;
     }
 }
