@@ -18,4 +18,5 @@ public class Movie {
         this.rating = rating;
         this.title = title;
     }
+
 }

@@ -74,7 +74,15 @@ public class MainActivityFragment extends Fragment {
         }
 
         private void displayMoviesResults(){
-
+            if (results!=null&&results.size()>0){
+                PosterAdapter posterAdapter=new PosterAdapter(getActivity(),results);
+                imageGridView.setAdapter(posterAdapter);
+                imageGridView.setVisibility(View.VISIBLE);
+                noMoviesMessageTextView.setVisibility(View.GONE);
+            }else {
+                noMoviesMessageTextView.setVisibility(View.VISIBLE);
+                imageGridView.setVisibility(View.GONE);
+            }
         }
 
         public String getJsonFromHttpConnection() {
