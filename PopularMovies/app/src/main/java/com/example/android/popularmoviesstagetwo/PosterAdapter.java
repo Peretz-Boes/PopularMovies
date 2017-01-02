@@ -1,9 +1,6 @@
 package com.example.android.popularmoviesstagetwo;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.DataSetObserver;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,48 +11,32 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 /**
- * Created by Peretz on 2016-07-05.
+ * Created by Peretz on 2016-12-23.
  */
 public class PosterAdapter extends BaseAdapter {
     private static final String LOG_TAG=PosterAdapter.class.getSimpleName();
     private Context context;
-    private ArrayList<String> arrayList;
-    private int posterWidth;
-    private Cursor cursor;
-    private boolean dataIsValid;
-    private int idRowColumn;
-    private DataSetObserver dataSetObserver;
+    private ArrayList<String> moviesList;
 
-    public PosterAdapter(Context c,ArrayList<String> filePaths,int a){
-        context=c;
-        arrayList=filePaths;
-        posterWidth=a;
-        if (dataIsValid){
-            cursor.registerDataSetObserver(dataSetObserver);
-        }
-        Log.d(LOG_TAG,"in super");
-    }
 
-    public Cursor getCursor(){
-        return cursor;
+    public PosterAdapter(Context c,ArrayList<String> movieList,int a) {
+        this.context = c;
+        this.moviesList = movieList;
     }
 
     @Override
     public int getCount() {
-        return arrayList.size();
+        return moviesList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return moviesList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        if (dataIsValid&&cursor!=null&&cursor.moveToPosition(position)){
-            return cursor.getLong(idRowColumn);
-        }
-        return 0;
+        return position;
     }
 
     @Override
@@ -66,7 +47,7 @@ public class PosterAdapter extends BaseAdapter {
         }else {
             image=(ImageView)convertView;
         }
-        String url = "http://image.tmdb.org/t/p/w185" + arrayList.get(position);
+        String url = "http://image.tmdb.org/t/p/w185" + moviesList.get(position);
         Picasso.with(context).load(url).into(image);
         return image;
     }
