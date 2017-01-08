@@ -34,6 +34,11 @@ public class MainActivityFragment extends Fragment {
     ArrayList<Movie> moviesDataList;
 
     public MainActivityFragment() {
+
+    }
+
+    public interface BundleCallback{
+        void onItemSelected(Movie movie);
     }
 
     @Override
@@ -70,10 +75,10 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<Movie> results) {
-            displayMoviesResults();
+            displayMoviesResults(results);
         }
 
-        private void displayMoviesResults(){
+        private void displayMoviesResults(ArrayList<Movie> results){
             if (results!=null&&results.size()>0){
                 PosterAdapter posterAdapter=new PosterAdapter(getActivity(),results);
                 imageGridView.setAdapter(posterAdapter);

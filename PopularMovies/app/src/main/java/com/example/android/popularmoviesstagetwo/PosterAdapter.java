@@ -1,6 +1,7 @@
 package com.example.android.popularmoviesstagetwo;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +23,10 @@ public class PosterAdapter extends BaseAdapter {
     public PosterAdapter(Context c,ArrayList<String> movieList,int a) {
         this.context = c;
         this.moviesList = movieList;
+    }
+
+    public PosterAdapter(FragmentActivity activity, ArrayList<Movie> results) {
+
     }
 
     @Override
