@@ -2,4 +2,6 @@
     <string name="app_name">PopularMoviesRewrite</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="poster_img_description">Poster image of the movie</string>
+    <string name="internet_connection_message">There is no Internet service.  Please ensure you are connected to the Internet.</string>
 </resources>
