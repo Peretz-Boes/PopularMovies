@@ -1,4 +1,4 @@
-package com.example.android.popularmoviesstagetwo;
+package com.example.android.popularmoviesstagetwo.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.example.android.popularmoviesstagetwo.R;
+import com.example.android.popularmoviesstagetwo.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

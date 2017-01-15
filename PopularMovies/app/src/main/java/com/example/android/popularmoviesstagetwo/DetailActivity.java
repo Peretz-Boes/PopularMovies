@@ -1,11 +1,10 @@
 package com.example.android.popularmoviesstagetwo;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+
+import com.example.android.popularmoviesstagetwo.model.Movie;
+import com.example.android.popularmoviesstagetwo.utils.Constants;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -13,17 +12,14 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        if (savedInstanceState==null){
+            Movie selectedMovie=(Movie)getIntent().getSerializableExtra(Constants.MOVIE_TAG);
+            Bundle arguments=new Bundle();
+            arguments.putSerializable(Constants.MOVIE_TAG,selectedMovie);
+            DetailActivityFragment detailActivityFragment=new DetailActivityFragment();
+            detailActivityFragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction().add(R.id.movie_detail_container,detailActivityFragment).commit();
+        }
     }
 
 }

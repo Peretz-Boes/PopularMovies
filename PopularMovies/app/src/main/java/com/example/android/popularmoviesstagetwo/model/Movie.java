@@ -1,7 +1,9 @@
-package com.example.android.popularmoviesstagetwo;
+package com.example.android.popularmoviesstagetwo.model;
 
-import com.example.android.popularmoviesstagetwo.Constants.APIConstants;
+import com.example.android.popularmoviesstagetwo.utils.Constants;
+import com.example.android.popularmoviesstagetwo.utils.Constants.APIConstants;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,7 +12,7 @@ import java.util.List;
 /**
  * Created by Peretz on 2016-12-22.
  */
-public class Movie {
+public class Movie implements Serializable {
 
     private String poster_path;
     private Boolean adult;

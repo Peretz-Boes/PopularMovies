@@ -1,6 +1,7 @@
 package com.example.android.popularmoviesstagetwo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -8,9 +9,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.android.popularmoviesstagetwo.adapter.MovieAdapter;
+import com.example.android.popularmoviesstagetwo.model.Movie;
+import com.example.android.popularmoviesstagetwo.model.MoviesListResponse;
+import com.example.android.popularmoviesstagetwo.network.MovieClient;
+import com.example.android.popularmoviesstagetwo.network.MovieRetrofitInterface;
+import com.example.android.popularmoviesstagetwo.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +42,16 @@ public class MainActivityFragment extends Fragment {
         GridView movieGrid=(GridView)rootView.findViewById(R.id.movie_grid);
         noMoviesTextView=(TextView)rootView.findViewById(R.id.noMovieMessageTextView);
         movies=new ArrayList<>();
-        movieRetrofitInterface=MovieClient.createService(MovieRetrofitInterface.class);
+        movieRetrofitInterface= MovieClient.createService(MovieRetrofitInterface.class);
             mMovieAdapter = new MovieAdapter(getActivity(), movies);
             movieGrid.setAdapter(mMovieAdapter);
+        movieGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Movie selectedMovie=movies.get(position);
+                showDetailScreenForMovie(selectedMovie);
+            }
+        });
         if (isOnline()){
             getMovies(Constants.APIConstants.SORT_BY_POPULARITY);
             noMoviesTextView.setVisibility(View.GONE);
@@ -43,6 +59,12 @@ public class MainActivityFragment extends Fragment {
             noMoviesTextView.setVisibility(View.VISIBLE);
         }
         return rootView;
+    }
+
+    private void showDetailScreenForMovie(Movie movie){
+        Intent intent=new Intent(getActivity(),DetailActivity.class);
+        intent.putExtra(Constants.MOVIE_TAG,movie);
+        startActivity(intent);
     }
 
     public boolean isOnline(){

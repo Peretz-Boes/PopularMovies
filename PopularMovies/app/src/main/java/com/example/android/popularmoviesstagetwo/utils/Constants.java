@@ -1,4 +1,4 @@
-package com.example.android.popularmoviesstagetwo;
+package com.example.android.popularmoviesstagetwo.utils;
 
 /**
  * Created by Peretz on 2017-01-03.
@@ -15,6 +15,6 @@ public class Constants {
         public static final String IMAGE_URL="http://image.tmdb.org/t/p/";
         public static final String SMALL_SIZED_IMAGE="w185";
         public static final String MAXIMUM_RATING="10";
-        public static final String YOUTUBE_VIDEOS_PREFIX="vnd.youtube";
+        public static final String YOUTUBE_VIDEOS_PREFIX="vnd.youtube:";
     }
 }

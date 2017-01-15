@@ -1,4 +1,6 @@
-package com.example.android.popularmoviesstagetwo;
+package com.example.android.popularmoviesstagetwo.network;
+
+import com.example.android.popularmoviesstagetwo.utils.Constants;
 
 import java.io.IOException;
 

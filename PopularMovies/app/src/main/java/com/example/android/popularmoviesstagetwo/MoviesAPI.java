@@ -1,5 +1,7 @@
 package com.example.android.popularmoviesstagetwo;
 
+import com.example.android.popularmoviesstagetwo.model.Movie;
+
 import java.util.List;
 
 import retrofit2.Callback;

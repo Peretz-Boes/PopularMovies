@@ -1,17 +1,19 @@
-package com.example.android.popularmoviesstagetwo;
+package com.example.android.popularmoviesstagetwo.model;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 /**
- * Created by Peretz on 2017-01-11.
+ * Created by nadirhussain on 10/01/2017.
  */
-public class MoviesListResponse {
+
+public class ReviewListResponse {
+
     @SerializedName("page")
     private int page;
     @SerializedName("results")
-    private List<Movie> results;
+    private List<Review> results;
     @SerializedName("total_results")
     private int totalResults;
     @SerializedName("total_pages")
@@ -25,20 +27,12 @@ public class MoviesListResponse {
         this.page = page;
     }
 
-    public List<Movie> getResults() {
+    public List<Review> getResults() {
         return results;
     }
 
-    public void setResults(List<Movie> results) {
+    public void setResults(List<Review> results) {
         this.results = results;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
     }
 
     public int getTotalResults() {
@@ -47,5 +41,13 @@ public class MoviesListResponse {
 
     public void setTotalResults(int totalResults) {
         this.totalResults = totalResults;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
     }
 }
