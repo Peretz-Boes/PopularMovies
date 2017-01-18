@@ -9,4 +9,6 @@
     <string name="movie_reviews">Reviews</string>
     <string name="movie_trailers">Trailers</string>
     <string name="name_of_trailer">Trailer %d</string>
+    <string name="favourite_movie_message">Added movie to favourites</string>
+    <string name="unfavourite_movie_message">Remove movie from favourites</string>
 </resources>

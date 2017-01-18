@@ -8,9 +8,9 @@
         android:id="@+id/trailer_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_media_play"
+        android:drawableLeft="@android:drawable/ic_media_play"
         android:drawablePadding="5dp"
-        android:drawableStart="@drawable/ic_media_play"
+        android:drawableStart="@android:drawable/ic_media_play"
         android:gravity="center"/>
 
 </LinearLayout>

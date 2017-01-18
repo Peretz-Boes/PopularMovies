@@ -27,6 +27,11 @@
             android:label="@string/title_activity_detail"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        
+        <provider
+            android:authorities="com.example.android.popularmoviesstagetwo.db.provider"
+            android:name=".db.MovieProvider"/>
+        
     </application>
 
 </manifest>

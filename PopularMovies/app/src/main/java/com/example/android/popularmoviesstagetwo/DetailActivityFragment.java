@@ -23,6 +23,7 @@ import com.example.android.popularmoviesstagetwo.model.Trailer;
 import com.example.android.popularmoviesstagetwo.model.TrailersList;
 import com.example.android.popularmoviesstagetwo.network.MovieClient;
 import com.example.android.popularmoviesstagetwo.network.MovieRetrofitInterface;
+import com.example.android.popularmoviesstagetwo.tasks.ManageFavouritesAsyncTask;
 import com.example.android.popularmoviesstagetwo.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -65,6 +66,13 @@ public class DetailActivityFragment extends Fragment {
         rootView.setVisibility(View.VISIBLE);
         movieDetails=(Movie)bundle.getSerializable(Constants.MOVIE_TAG);
         initializeViews(rootView);
+        new ManageFavouritesAsyncTask(getActivity(),favouriteButton,movieDetails,false).execute();
+        favouriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ManageFavouritesAsyncTask(getActivity(),favouriteButton,movieDetails,false).execute();
+            }
+        });
         initializeReviewsAndTrailerLists(rootView);
         getReviews();
         getTrailers();
@@ -88,7 +96,7 @@ public class DetailActivityFragment extends Fragment {
     }
 
     private void initializeReviewsAndTrailerLists(View rootView){
-        final List<Review> reviews=new ArrayList<>();
+        List<Review> reviews=new ArrayList<>();
         final List<Trailer> trailers=new ArrayList<>();
         reviewAdapter=new ReviewAdapter(getActivity(),reviews);
         trailerAdapter=new TrailerAdapter(getActivity(),trailers);
@@ -100,9 +108,9 @@ public class DetailActivityFragment extends Fragment {
         trailerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String youtubeVideoId=trailers.get(position).getKey();
-                String youtubeVideoUri=Constants.APIConstants.YOUTUBE_VIDEOS_PREFIX+youtubeVideoId;
-                Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeVideoUri));
+                String youtubeVideoId = trailers.get(position).getKey();
+                String youtubeVideoUri = Constants.APIConstants.YOUTUBE_VIDEOS_PREFIX + youtubeVideoId;
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeVideoUri));
                 startActivity(intent);
             }
         });
@@ -115,8 +123,10 @@ public class DetailActivityFragment extends Fragment {
             public void onResponse(Call<ReviewListResponse> call, Response<ReviewListResponse> response) {
                 List<Review> reviews=response.body().getResults();
                 reviewAdapter.clear();
-                for (Review review:reviews){
-                    reviewAdapter.add(review);
+                if(reviews!=null) {
+                    for (Review review : reviews) {
+                        reviewAdapter.add(review);
+                    }
                 }
             }
 
@@ -134,8 +144,10 @@ public class DetailActivityFragment extends Fragment {
             public void onResponse(Call<TrailersList> call, Response<TrailersList> response) {
                 List<Trailer> trailers=response.body().getResults();
                 trailerAdapter.clear();
-                for (Trailer trailer:trailers){
-                    trailerAdapter.add(trailer);
+                if (trailers!=null) {
+                    for (Trailer trailer : trailers) {
+                        trailerAdapter.add(trailer);
+                    }
                 }
             }
 
