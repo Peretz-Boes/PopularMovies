@@ -11,4 +11,8 @@
     <string name="name_of_trailer">Trailer %d</string>
     <string name="favourite_movie_message">Added movie to favourites</string>
     <string name="unfavourite_movie_message">Remove movie from favourites</string>
+    <string name="sort_by">Sort By</string>
+    <string name="sort_by_most_popular">Sort by most popular</string>
+    <string name="sort_by_rating">Sort by rating</string>
+    <string name="sort_by_favourites">Sort by favourites</string>
 </resources>
