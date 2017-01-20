@@ -49,6 +49,10 @@ public class MainActivityFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    public interface BundleCallback{
+        void onItemSelected(Movie movie);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -73,7 +77,7 @@ public class MainActivityFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        super.onOptionsItemSelected(item);
         switch (item.getItemId()){
             case R.id.action_sort_by_most_popular:
                 if (isOnline()){
@@ -150,7 +154,7 @@ public class MainActivityFragment extends Fragment {
         Call<MoviesListResponse>moviesListResponseCall=movieRetrofitInterface.getMovies(sortOrder);
         moviesListResponseCall.enqueue(new Callback<MoviesListResponse>() {
             @Override
-            public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+            public void onResponse(Response<MoviesListResponse> response) {
                 if (response!=null&&response.body()!=null){
                     List<Movie> movieList=response.body().getResults();
                     mMovieAdapter.clear();
@@ -163,7 +167,7 @@ public class MainActivityFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+            public void onFailure(Throwable t) {
                 Toast.makeText(getContext(),getString(R.string.internet_connection_message),Toast.LENGTH_SHORT).show();
             }
         });

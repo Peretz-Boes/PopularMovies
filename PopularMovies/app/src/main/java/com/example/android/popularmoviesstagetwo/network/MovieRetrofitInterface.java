@@ -15,8 +15,8 @@ import retrofit2.http.Query;
 public interface MovieRetrofitInterface {
     @GET("3/discover/movie")
     Call<MoviesListResponse> getMovies(@Query("sort_by")String sortBy);
-    @GET("3/movie/{id}reviews")
+    @GET("3/movie/{id}/reviews?")
     Call<ReviewListResponse> getMovieReviews(@Path("id") String id);
-    @GET("3/movie/{id}videos")
+    @GET("3/movie/{id}/videos?")
     Call<TrailersList> getMovieTrailers(@Path("id") String id);
 }

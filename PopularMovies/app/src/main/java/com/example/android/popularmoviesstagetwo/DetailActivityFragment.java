@@ -120,7 +120,7 @@ public class DetailActivityFragment extends Fragment {
         Call<ReviewListResponse> reviewListResponseCall=movieRetrofitInterface.getMovieReviews(movieDetails.getId());
         reviewListResponseCall.enqueue(new Callback<ReviewListResponse>() {
             @Override
-            public void onResponse(Call<ReviewListResponse> call, Response<ReviewListResponse> response) {
+            public void onResponse(Response<ReviewListResponse> response) {
                 List<Review> reviews=response.body().getResults();
                 reviewAdapter.clear();
                 if(reviews!=null) {
@@ -131,7 +131,7 @@ public class DetailActivityFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ReviewListResponse> call, Throwable t) {
+            public void onFailure(Throwable t) {
                 Toast.makeText(getActivity(),"Throw up",Toast.LENGTH_LONG).show();
             }
         });
@@ -141,7 +141,7 @@ public class DetailActivityFragment extends Fragment {
         Call<TrailersList> trailersListCall=movieRetrofitInterface.getMovieTrailers(movieDetails.getId());
         trailersListCall.enqueue(new Callback<TrailersList>() {
             @Override
-            public void onResponse(Call<TrailersList> call, Response<TrailersList> response) {
+            public void onResponse(Response<TrailersList> response) {
                 List<Trailer> trailers=response.body().getResults();
                 trailerAdapter.clear();
                 if (trailers!=null) {
@@ -152,7 +152,7 @@ public class DetailActivityFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<TrailersList> call, Throwable t) {
+            public void onFailure(Throwable t) {
                 Toast.makeText(getActivity(),"Throw up",Toast.LENGTH_LONG).show();
             }
         });
