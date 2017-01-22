@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.android.popularmoviesstagetwo.R;
 import com.example.android.popularmoviesstagetwo.db.DbUtils;
@@ -29,24 +30,25 @@ public class UpdateFavouritesAsyncTask extends AsyncTask<Void,Void,Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        if (isFavourited){
+        if (!isFavourited){
+            context.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,MovieContract.MovieEntry._ID+" = ?",new String[]{movie.getId()});
+        }else {
             ContentValues contentValues= DbUtils.toContentValues(movie);
             context.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,contentValues);
-        }else {
-            context.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,MovieContract.MovieEntry._ID+"=?",new String[]{movie.getId()});
         }
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        int stringResourceToast;
-        if (isFavourited){
-            stringResourceToast= R.string.favourite_movie_message;
+        String stringResourceToast;
+        if (!isFavourited){
+            stringResourceToast="Added to favourites";
             favouritedButton.setText(context.getString(R.string.unfavourite_movie_message));
         }else {
-            stringResourceToast=R.string.unfavourite_movie_message;
+            stringResourceToast="Removed from favourites";
             favouritedButton.setText(context.getString(R.string.favourite_movie_message));
         }
+        Toast.makeText(context,stringResourceToast,Toast.LENGTH_SHORT).show();
     }
 }

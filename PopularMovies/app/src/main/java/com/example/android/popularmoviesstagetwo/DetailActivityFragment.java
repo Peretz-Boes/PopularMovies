@@ -70,7 +70,7 @@ public class DetailActivityFragment extends Fragment {
         favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ManageFavouritesAsyncTask(getActivity(),favouriteButton,movieDetails,false).execute();
+                new ManageFavouritesAsyncTask(getActivity(),favouriteButton,movieDetails,true).execute();
             }
         });
         initializeReviewsAndTrailerLists(rootView);

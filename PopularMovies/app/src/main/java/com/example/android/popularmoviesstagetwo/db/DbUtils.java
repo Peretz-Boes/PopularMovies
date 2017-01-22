@@ -23,7 +23,7 @@ public class DbUtils {
     }
 
     public static boolean isFavourite(Context context,String id){
-        Cursor cursor=context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,null,MovieContract.MovieEntry._ID+"=?",new String[]{id},null);
+        Cursor cursor=context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,null,MovieContract.MovieEntry._ID+" = ?",new String[]{id},null);
         if (cursor!=null){
             int numRows=cursor.getCount();
             return (numRows>0);

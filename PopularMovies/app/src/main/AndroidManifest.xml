@@ -25,16 +25,10 @@
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail">
 
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <data android:scheme="http"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-
         </activity>
         
         <provider
-            android:authorities="com.example.android.popularmoviesstagetwo.db.provider"
+            android:authorities="com.example.android.popularmoviesstagetwo.db.MovieProvider"
             android:name=".db.MovieProvider"/>
         
     </application>
