@@ -52,12 +52,12 @@ public class FetchFavouritesAsyncTask extends AsyncTask<Void,Void,List<Movie>> {
     }
 
     @Override
-    protected void onPostExecute(List<Movie> movies) {
+    protected void onPostExecute(List<Movie> fetchedMovies) {
         if (movies!=null){
             if (movieAdapter!=null){
                 movieAdapter.clear();
                 movies=new ArrayList<>();
-                movies.addAll(movies);
+                movies.addAll(fetchedMovies);
                 for (Movie movie:movies){
                     movieAdapter.add(movie);
                 }

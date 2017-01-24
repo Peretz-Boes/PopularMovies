@@ -17,10 +17,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (findViewById(R.id.movie_detail_container)!=null){
+        if (findViewById(R.id.movie_details)!=null){
             isATablet=true;
             if (savedInstanceState==null){
-                getSupportFragmentManager().beginTransaction().replace(R.id.movie_detail_container,new DetailActivityFragment(),DETAIL_FRAGMENT_TAG).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.movie_details,new DetailActivityFragment(),DETAIL_FRAGMENT_TAG).commit();
             }
         }else {
             isATablet=false;
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             bundle.putParcelable(Constants.MOVIE_TAG, (Parcelable) movie);
             DetailActivityFragment detailActivityFragment=new DetailActivityFragment();
             detailActivityFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.movie_detail_container,detailActivityFragment,DETAIL_FRAGMENT_TAG).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.movie_details,detailActivityFragment,DETAIL_FRAGMENT_TAG).commit();
         }else {
             Intent intent=new Intent(this,DetailActivity.class);
             intent.putExtra(Constants.MOVIE_TAG,movie);

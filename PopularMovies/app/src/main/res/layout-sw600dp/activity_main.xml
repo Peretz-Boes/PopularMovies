@@ -3,10 +3,14 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:baselineAligned="false"
+              android:divider="?android:attr/dividerHorizontal"
+              tools:context=".MainActivity">
 
     <fragment
         android:id="@+id/movie_fragment"
+        android:name="com.example.android.popularmoviesstagetwo.MainActivityFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"

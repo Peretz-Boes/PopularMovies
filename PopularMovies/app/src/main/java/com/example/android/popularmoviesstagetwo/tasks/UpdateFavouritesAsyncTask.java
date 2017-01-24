@@ -31,10 +31,10 @@ public class UpdateFavouritesAsyncTask extends AsyncTask<Void,Void,Void> {
     @Override
     protected Void doInBackground(Void... params) {
         if (!isFavourited){
-            context.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,MovieContract.MovieEntry._ID+" = ?",new String[]{movie.getId()});
-        }else {
             ContentValues contentValues= DbUtils.toContentValues(movie);
             context.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,contentValues);
+        }else {
+            context.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,MovieContract.MovieEntry._ID+" = ?",new String[]{movie.getId()});
         }
         return null;
     }
