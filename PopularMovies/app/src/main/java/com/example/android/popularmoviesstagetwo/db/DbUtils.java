@@ -26,6 +26,7 @@ public class DbUtils {
         Cursor cursor=context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,null,MovieContract.MovieEntry._ID+" = ?",new String[]{id},null);
         if (cursor!=null){
             int numRows=cursor.getCount();
+            cursor.close();
             return (numRows>0);
         }
         return false;

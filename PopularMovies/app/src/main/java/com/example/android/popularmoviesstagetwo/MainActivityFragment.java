@@ -44,6 +44,8 @@ public class MainActivityFragment extends Fragment {
     private MenuItem menuItemSortByMostPopular;
     private MenuItem menuItemSortByRating;
     private MenuItem menuItemSortByFavourites;
+    private static final String MAIN_ACTIVITY_FRAGMENT_KEY="main_activity_fragment_key";
+    private MainActivityFragment mainActivityFragmentInstance;
 
     public MainActivityFragment(){
         setHasOptionsMenu(true);

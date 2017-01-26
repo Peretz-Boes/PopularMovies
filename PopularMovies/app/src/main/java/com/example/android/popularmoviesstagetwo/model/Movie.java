@@ -1,9 +1,11 @@
 package com.example.android.popularmoviesstagetwo.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.android.popularmoviesstagetwo.utils.Constants;
 import com.example.android.popularmoviesstagetwo.utils.Constants.APIConstants;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * Created by Peretz on 2016-12-22.
  */
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
 
     private String poster_path;
     private Boolean adult;
@@ -36,9 +38,6 @@ public class Movie implements Serializable {
         this.original_title = original_title;
         this.vote_average = vote_average;
         this.release_date = release_date;
-    }
-    public Movie(){
-
     }
 
     public String getImageFullURL() {
@@ -174,5 +173,39 @@ public class Movie implements Serializable {
         this.poster_path = poster_path;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public Movie(Parcel parcel){
+        poster_path=parcel.readString();
+        overview=parcel.readString();
+        release_date=parcel.readString();
+        original_title=parcel.readString();
+        vote_average=parcel.readFloat();
+        id=parcel.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(poster_path);
+        parcel.writeString(overview);
+        parcel.writeString(release_date);
+        parcel.writeString(original_title);
+        parcel.writeFloat(vote_average);
+        parcel.writeString(id);
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR=new Parcelable.Creator<Movie>(){
+        public Movie createFromParcel(Parcel movieParcel){
+            return new Movie(movieParcel);
+        }
+
+        public Movie[] newArray(int size){
+            return new Movie[size];
+        }
+
+    };
 
 }

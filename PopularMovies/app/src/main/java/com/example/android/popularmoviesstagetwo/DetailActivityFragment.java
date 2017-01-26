@@ -64,7 +64,7 @@ public class DetailActivityFragment extends Fragment {
             return rootView;
         }
         rootView.setVisibility(View.VISIBLE);
-        movieDetails=(Movie)bundle.getSerializable(Constants.MOVIE_TAG);
+        movieDetails=bundle.getParcelable(Constants.MOVIE_TAG);
         initializeViews(rootView);
         new ManageFavouritesAsyncTask(getActivity(),favouriteButton,movieDetails,false).execute();
         favouriteButton.setOnClickListener(new View.OnClickListener() {

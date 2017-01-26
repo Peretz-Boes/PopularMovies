@@ -5,4 +5,5 @@
           android:name="com.example.android.popularmoviesstagetwo.MainActivityFragment"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+          tools:context=".MainActivityFragment"
           tools:layout="@layout/fragment_main"/>

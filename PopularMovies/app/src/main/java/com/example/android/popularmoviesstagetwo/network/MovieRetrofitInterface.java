@@ -13,7 +13,7 @@ import retrofit2.http.Query;
  * Created by Peretz on 2017-01-11.
  */
 public interface MovieRetrofitInterface {
-    @GET("3/discover/movie")
+    @GET("3/discover/movie?")
     Call<MoviesListResponse> getMovies(@Query("sort_by")String sortBy);
     @GET("3/movie/{id}/reviews?")
     Call<ReviewListResponse> getMovieReviews(@Path("id") String id);
