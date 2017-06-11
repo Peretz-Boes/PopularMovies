@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     public void onItemSelected(Movie movie) {
         if(isATablet){
             Bundle bundle=new Bundle();
-            bundle.putParcelable(Constants.MOVIE_TAG, movie);
+            bundle.putSerializable(Constants.MOVIE_TAG,movie);
             DetailActivityFragment detailActivityFragment=new DetailActivityFragment();
             detailActivityFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.movie_detail_container,detailActivityFragment,DETAIL_FRAGMENT_TAG).commit();

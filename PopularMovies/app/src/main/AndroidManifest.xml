@@ -30,7 +30,7 @@
         <provider
             android:authorities="com.example.android.popularmoviesstagetwo.db.MovieProvider"
             android:name=".db.MovieProvider"/>
-        
+
     </application>
 
 </manifest>

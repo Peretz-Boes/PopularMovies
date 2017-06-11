@@ -124,7 +124,7 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie selectedMovie=movies.get(position);
-                showDetailScreenForMovie(selectedMovie);
+                ((BundleCallback)getActivity()).onItemSelected(selectedMovie);
             }
         });
         if (isOnline()){
